@@ -1,0 +1,56 @@
+In this project, I do a lot of things that may seem weird to expirienced programmers. This may be because this is my first _real_ project, and also because this program uses a lot of C++11 features.
+
+If something seems extremely stupid or wierd, I will try to explain my reasoning behind the idea here.
+
+---------------------------------------
+
+		*General style*
+
+I mostly use CamelCase for variable, class and function names.
+
+functions	- Starts with lowercase, and subsequent letters are uppercase (someFunction).
+variable names  - Same as functions.
+classes		- Starts with UpperCase, and all subsequent letters are also uppercase (SomeClass). 
+
+		*Hungarian prefixes*
+
+m_	- signifies that the variables passed to a function will be changed inside a function.
+h_	- used to signify local helper functions (made with auto and lambdas).
+r_	- values returned from the function have this prefix.
+n_	- number of something
+
+is_	- variables which are used by functions to return a bool.
+-------------------------------------
+
+Notes about language:
+
+This project implements a small subset of Scheme. This is not a serious project, and will never become one. There is no optimization (such as tail recursion), and the performance is not considered. Also there is almost no library. 
+
+
+I use Clojure style syntax to evaluate only part of the list, i.e.
+
+=> (42 42)
+
+Error
+
+=> '(42 42)
+
+(42 42)
+
+=> (let ((x 3)) '(x 42))
+
+(x 42)
+
+=> let ((x 123)) '(~x 42))
+
+(~x 42)
+
+=> (let ((x 16)) `(x 42))
+
+(x 42)
+
+=> (let ((x 16) (y 3)) `(~x ~y 42))
+
+(16 3 42)
+
+

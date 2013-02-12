@@ -1,6 +1,7 @@
 #include "SList.h"
 
-namespace SLib { namespace SList {
+namespace SLib {
+namespace SList {
 
 
 

@@ -1,11 +1,9 @@
-**README**
-
 SPP
 ===
 
-Scheme interpreter written in modern C++.
+Scheme interpreter written in C++.
 
-I am trying to write a Scheme interpreter in every language I know. I hope to write a version in each of the following languages: C++, C, Scheme, Clojure, Scala, Haskell, ML/OCaml & Erlang.
+I am trying to write a Scheme interpreter in every language I know. I hope to write a version in C++, C, Scheme, Clojure, Scala, Haskell, ML & Erlang.
 
 
 

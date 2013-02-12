@@ -1,11 +1,12 @@
 #ifndef SERROR_H_INCLUDED
 #define SERROR_H_INCLUDED
 
-#include "main.h"
-#include "SSexps.h"
+#include <string>
 
 namespace SLib {
 namespace SError {
+
+///use std::runtime_error(std::string msg)
 
 //bool indicates if the error is fatal.
 //0 -- terminate program
@@ -19,8 +20,8 @@ void printError(ErrorLevel level = ErrorLevel::FATAL_ERROR,
                 int lineNumber = 0,
                 std::string fileName = "");
 
-int handleError(SSexps::ParseError error);
 
+//BAD IDEA! TM
 
 //Metaprogramming to the rescue!
 template <class T>
@@ -28,20 +29,21 @@ class invalid {};
 
 template <>
 struct invalid <int> {
-    //static operator int() const { return 9999999; }
-    constexpr static int val = (int)999999999;
+   //static operator int() const { return 9999999; }
+   constexpr static int val = (int)999999999;
 };
 
 template <>
 struct invalid <char> {
-    constexpr static char val = 0;
+   constexpr static char val = 0;
 };
 
 template <>
 struct invalid <float> {
-    constexpr static float val = 42.16691234;
+   constexpr static float val = 42.16691234;
 };
 
-}} //namespace
+}
+} //namespace
 
 #endif // SERROR_H_INCLUDED

@@ -1,60 +1,79 @@
 #ifndef SSEXPS_H_INCLUDED
 #define SSEXPS_H_INCLUDED
 
-#include "main.h"
+#include <memory>
+#include <stdexcept>
 
-namespace SLib { namespace SSexps { //Scheme S-Expression
-
-enum class ParseError { NO_BEGIN_PARENTHESIS = -42, NO_END_PARENTHESIS,
-                        OTHER_STUFF,                MORE_STUFF }; //other_stuff?
-
-
-class Sexps {
-    friend Sexps parseExpression(std::string expr);
-
-    bool eval;
-    bool atom;
-    std::string val;
-
-    std::vector<Sexps> subSexps;
-
-public:
-    Sexps(std::string _val = 0, bool _eval = true)
-        : val(_val), eval(_eval) {}
-
-};
+#include <vector>
+#include <string>
 
 
+//#include <tuple> //don't need
+
+
+
+namespace SLib {
+namespace SSexps { //Scheme S-Expression
+
+enum class ParseError {
+   NO_BEGIN_PARENTHESIS = -42, NO_END_PARENTHESIS, UNMATCHED_QUOTES, OTHER_STUFF }; //other_stuff?
+
+
+std::string formatSexps(const std::string& sexpsWithSpaces);
+
+//string checking
 
 /*
-//I suck at C++ (or rather C++ is a shitty language). I am not even sure what I am trying to do.
-//use C++11 tuples or something....
-
-template <class RetType,
-            class Param1, class Param2, class Param3, class Param4, class Param5,
-            class Param6, class Param7, class Param8, class Param9, class Param10,
-            class Param11, class Param12, class Param13, class Param14,
-            class Param15, class Param16,>
-class Function {};
-
-template<>
-class Function <class RetType, class Param1> {
-    RetType body(Param1 p) {}
-};
-
-template<>
-class Function <class RetType, class Param1, class Param2> {
-    RetType body(Param1 p1, Param2 p2) {}
-};
+***delete***
+bool isCharInQuotes(int charPlace, const std::string& str);                      //checks if char inside "quotes"
+bool isStrInsideQuotes(int start, int end, const std::string& str);              //checks if str[start]..str[end] is inside "quotes"
 */
 
 
-Sexps parseExpression(std::string expr);
-std::string formatSexps(std::string sexps);
+class Sexps {
+   friend Sexps parseExpression(const std::string& expr);
+
+   bool is_quoted, is_backQuoted, is_atom;
+   bool is_bool, is_int, is_float, is_char, is_str;
+
+   const std::string val;
+   std::vector<Sexps>* subSexps;
+
+public:
+
+   Sexps(const std::string &_val = 0)
+      : is_quoted(is_backQuoted(is_atom(is_bool(is_int(is_float(is_char(is_str(false))))))))
+   {
+
+      val = formatSexps(_val);
+      parseExps();
+   }
+
+
+   bool isQuoted()      const { return is_quoted;     }
+   bool isBackQuoted()  const { return is_backQuoted; }
+
+   bool isAtom()        const { return is_atom;       }
+
+   bool isInt()         const { return is_int;        }
+   bool isFloat()       const { return is_float;      }
+   bool isChar()        const { return is_char;       }
+
+   void eval();
+   void parseExps();
+
+};
 
 
 
-}} //namespace
+
+
+
+
+int handleError(SSexps::ParseError error);
+
+}
+} //namespace
 
 
 /*

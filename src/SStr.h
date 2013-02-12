@@ -3,7 +3,8 @@
 
 #include <string>
 
-namespace SLib { namespace SStr {
+namespace SLib {
+namespace SStr {
 
 std::string intToCppStr(int num);
 int cppStrToInt(std::string str);
