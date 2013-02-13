@@ -11,8 +11,7 @@ extern std::string file;
 extern int line;
 
 
-}
-} //namespace
+}} //namespace
 
 
 #endif // SSTATEMACHINE_H_INCLUDED

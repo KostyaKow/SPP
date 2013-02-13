@@ -31,5 +31,4 @@ void printError(ErrorLevel level,
    std::cout << levelStr << " - " << msg;
 }
 
-}
-} //namespace
+}} //namespace

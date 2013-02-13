@@ -72,8 +72,7 @@ public:
 
 int handleError(SSexps::ParseError error);
 
-}
-} //namespace
+}} //namespace
 
 
 /*

@@ -95,8 +95,7 @@ for (T i : list)
 
 }
 
-}
-} //namespace
+}} //namespace
 
 #endif // SLIST_H_INCLUDED
 

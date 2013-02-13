@@ -43,7 +43,6 @@ struct invalid <float> {
    constexpr static float val = 42.16691234;
 };
 
-}
-} //namespace
+}} //namespace
 
 #endif // SERROR_H_INCLUDED
