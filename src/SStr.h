@@ -6,11 +6,9 @@
 namespace SLib {
 namespace SStr {
 
-std::string intToCppStr(int num);
-int cppStrToInt(std::string str);
-
-bool isNumber(std::string s);
 bool isDigit(char c);
+bool isFloat(std::string s);
+bool isInt(std::string s);
 
 }} //namespace
 

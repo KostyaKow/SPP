@@ -4,10 +4,5 @@ namespace SLib {
 namespace SList {
 
 
-
-
-
-
-
 }} //namespace
 

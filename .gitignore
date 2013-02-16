@@ -1,5 +1,7 @@
 *.o
 *.depend
 *.layout
+bin/
+obj/
 bin/Debug/LispInterpreter
 .gitignore

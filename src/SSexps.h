@@ -41,10 +41,8 @@ class Sexps {
 
 public:
 
-   Sexps(const std::string &_val = 0)
-      : is_quoted(is_backQuoted(is_atom(is_bool(is_int(is_float(is_char(is_str(false))))))))
-   {
-
+   Sexps(const std::string &_val = 0)  {
+      is_quoted = is_backQuoted = is_atom = is_bool = is_int = is_float = is_char = is_str = false;
       val = formatSexps(_val);
       parseExps();
    }

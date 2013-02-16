@@ -92,7 +92,6 @@ for (T i : list)
          return true;
 
    return false;
-
 }
 
 }} //namespace
