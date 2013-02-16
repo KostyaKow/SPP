@@ -1,12 +1,4 @@
-#include <string>
-#include <vector>
-
 #include "SSexps.h"
-#include "SStr.h"
-#include "SList.h"
-#include "SError.h"
-
-#include "misc.h" //delete
 
 namespace SLib {
 namespace SSexps { //S-Expression
@@ -38,26 +30,20 @@ void Sexps::parseExps() {
    std::vector<std::string> vecVal = h_groupWords(val);
 
    if (vecVal[0] != "(")
-      if (val[0] != '\'')
-         if (val[0] != '`') {
-            is_atom = true;
-            if (isDigit(val[0]))
-               for (char )
+      if (vecVal[0] != "'(")
+         if (vecVal[0] != "`(")
+            if (vecVal[0] != "~(")
+               type = Type::ATOM;
+            else type = Type::EVAL_SEXPS;
+         else type = Type::BACK_QUOTE_SEXPS;
+      else type = Type::QUOTE_SEXPS;
+   else type = Type::SEXPS; //parse normal ( (+ 3 5 6) ) expression
 
 
-         }
-         else
-            is_backQuoted = true;
-      else
-         is_quoted = true;
-
-   else {}
-
-   std::vector<std::string> vectorVal = h_groupWords(val);
 
    int n_openParens, n_closeParens;
 
-for (string str : vectorVal) {
+   for (std::string str in vecVal) {
       //if (str[0] == '(' || ((str[0] == '\'' || str[0] == '\`') && str[]
       //                )
    }
@@ -68,6 +54,7 @@ for (string str : vectorVal) {
 
 int handleError(SSexps::ParseError error) {
    using SSexps::ParseError;
+   using SError::ErrorLevel;
 
    switch (error) {
    case ParseError::NO_BEGIN_PARENTHESIS:
@@ -128,8 +115,10 @@ bool getNextQuote(const std::string& str, int current, int& m_start, int& m_end)
 
 //TODO: fix the removal of extra white spaces in strings ("     " becomes " ").
 std::string formatSexps(const std::string& sexpsWithSpaces) {
-   vector<char> beforeParens = {'\'', '`', '~'};
-   vector<char> openParens = {'(', ')'}, closeParens = {')', ']'}; //TODO
+   using SList::contains;
+
+   std::vector<char> beforeParens = {'\'', '`', '~'};
+   std::vector<char> openParens = {'(', ')'}, closeParens = {')', ']'}; //TODO
 
    //removes extra whitespaces between words (when there is more then 1). Disgregards extra white-spaces in quotes. Also removes whitespaces between ' and ( (~(, `().
    auto h_removeExtraWhitespaces = [&](const std::string& str, int start, int end) -> std::string {

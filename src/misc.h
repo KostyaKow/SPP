@@ -13,4 +13,7 @@ inline bool inRange(int b, int a, int c) { //inclusive (so >= <=)
     else return false;
 }
 
+typedef char byte;
+
+
 #endif // MISC_H_INCLUDED

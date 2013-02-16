@@ -14,10 +14,10 @@ void printError(ErrorLevel level,
    std::string levelStr;
 
    switch (level) {
-   case ErrorLevel::FATAL_ERROR:   levelStr = "fatal error";           break;
-   case ErrorLevel::BAD_INPUT:     levelStr = "incorrect input";       break;
-   case ErrorLevel::WARNING:       levelStr = "warning";               break;
-   default:                        levelStr = "unkown error level";    break;
+      case ErrorLevel::FATAL_ERROR:   levelStr = "fatal error";           break;
+      case ErrorLevel::BAD_INPUT:     levelStr = "incorrect input";       break;
+      case ErrorLevel::WARNING:       levelStr = "warning";               break;
+      default:                        levelStr = "unkown error level";    break;
    }
 
    std::cout << "\n";
@@ -31,4 +31,7 @@ void printError(ErrorLevel level,
    std::cout << levelStr << " - " << msg;
 }
 
-}} //namespace
+}
+} //namespace
+
+

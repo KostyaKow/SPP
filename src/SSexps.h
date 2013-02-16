@@ -7,8 +7,12 @@
 #include <vector>
 #include <string>
 
+#include "SStr.h"
+#include "SList.h"
+#include "SError.h"
+#include "SStateMachine.h"
 
-//#include <tuple> //don't need
+#include "misc.h"
 
 
 
@@ -33,36 +37,43 @@ bool isStrInsideQuotes(int start, int end, const std::string& str);             
 class Sexps {
    friend Sexps parseExpression(const std::string& expr);
 
-   bool is_quoted, is_backQuoted, is_atom;
-   bool is_bool, is_int, is_float, is_char, is_str;
 
-   const std::string val;
+
+   enum class Type : byte { BOOL, INT, FLOAT, CHAR, STR,  ATOM,
+                              QUOTE_SEXPS, BACK_QUOTE_SEXPS, EVAL_SEXPS, SEXPS };
+   Type type;
+
+
+   std::string val;
+   void* pVal; //cast this to needed type
    std::vector<Sexps>* subSexps;
+
 
 public:
 
    Sexps(const std::string &_val = 0)  {
-      is_quoted = is_backQuoted = is_atom = is_bool = is_int = is_float = is_char = is_str = false;
       val = formatSexps(_val);
       parseExps();
    }
 
+   inline bool isQuoted()     const { return type == Type::QUOTE_SEXPS;       }
+   inline bool isBackQuoted() const { return type == Type::BACK_QUOTE_SEXPS;  }
+   inline bool isEvaled()     const { return type == Type::EVAL_SEXPS;        }
 
-   bool isQuoted()      const { return is_quoted;     }
-   bool isBackQuoted()  const { return is_backQuoted; }
+   inline bool isSexps()      const { return type == Type::SEXPS; } //normal
 
-   bool isAtom()        const { return is_atom;       }
+   inline bool isBool()       const { return type == Type::BOOL;  }
+   inline bool isInt()        const { return type == Type::INT;   }
+   inline bool isFloat()      const { return type == Type::FLOAT; }
+   inline bool isChar()       const { return type == Type::CHAR;  }
+   inline bool isStr()        const { return type == Type::STR;   }
 
-   bool isInt()         const { return is_int;        }
-   bool isFloat()       const { return is_float;      }
-   bool isChar()        const { return is_char;       }
+   inline bool isAtom() const { return isBool() || isInt() || isFloat() || isChar() || isStr(); }
 
    void eval();
    void parseExps();
 
 };
-
-
 
 
 
