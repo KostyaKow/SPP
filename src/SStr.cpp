@@ -3,8 +3,7 @@
 
 #include "misc.h"
 
-namespace SLib {
-namespace SStr {
+
 
 bool isDigit(char c) { //messy, but fast
    if (c >= '0' && c <= '9') //if (SList::contains(SList::list('0' __ '9'), c))
@@ -62,5 +61,4 @@ NumType getNumType(std::string s) {
    else return NumType::FLOAT;
 }
 
-}}
 

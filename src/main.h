@@ -16,6 +16,14 @@
 
 #include <unistd.h>
 
-//#include <boost/lexical_cast.hpp>
+#include <boost/lexical_cast.hpp>
+
+#include "SList.h"
+#include "SStr.h"
+#include "SError.h"
+#include "SStateMachine.h"
+#include "SSexps.h"
+
+using namespace std;
 
 #endif // MAIN_H_INCLUDED

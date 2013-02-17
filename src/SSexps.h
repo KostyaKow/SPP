@@ -15,10 +15,6 @@
 #include "misc.h"
 
 
-
-namespace SLib {
-namespace SSexps { //Scheme S-Expression
-
 enum class ParseError {
    NO_BEGIN_PARENTHESIS = -42, NO_END_PARENTHESIS, UNMATCHED_QUOTES, OTHER_STUFF }; //other_stuff?
 
@@ -77,9 +73,7 @@ public:
 
 
 
-int handleError(SSexps::ParseError error);
-
-}} //namespace
+int handleError(ParseError error);
 
 
 /*

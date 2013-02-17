@@ -17,24 +17,18 @@ list('z', 'x' __ 'a');
 I <3 Haskell
 */
 
-namespace SLib {
-namespace SList {
-
-
-using SError::invalid;
-
 #define __ ,
 //#define list SLib::SList::list
 
 
 //TODO: change names of args?
 template <class T, class Y = T, class Z = T>
-std::vector<T> list(T start, Y end_or_step, Z end_or_invalid = invalid<Z>::val) {
+std::vector<T> list(T start, Y end_or_step, Z end_or_invalid = Exception::invalid<Z>::val) {
    std::vector<T> val;
 
    T step, end;
 
-   if (end_or_invalid == invalid<Z>::val) {  //if only passed 2 variables
+   if (end_or_invalid == Exception::invalid<Z>::val) {  //if only passed 2 variables
       end = end_or_step;
 
       if( end > start)
@@ -94,7 +88,6 @@ for (T i : list)
    return false;
 }
 
-}} //namespace
 
 #endif // SLIST_H_INCLUDED
 

@@ -3,124 +3,9 @@
 #include <boost/lexical_cast.hpp>
 
 
-namespace SLib {
-namespace SSexps { //S-Expression
-
 void Sexps::eval() {
 
 }
-
-void Sexps::parseExps() {
-   using SStr::NumType;
-   using SList::contains;
-   using SStr::getNumType;
-   using boost::lexical_cast;
-
-   //I call values separated by spaces "words".
-   auto h_groupWords = [](const std::string& str) -> std::vector<std::string> {
-      std::vector<std::string> r_words;
-
-      for (int i = 0; i < str.length(); i++) {
-         std::string s;
-         for (; str[i] != ' ' && i < str.length(); i++)
-            s.push_back(str[i]);
-
-         //check if previous is one of the quotes or ~, and concat to this s
-         if (r_words.size() && (r_words[r_words.size()-1] == "~" || r_words[r_words.size()-1] == "'" || r_words[r_words.size()-1] == "`"))
-            r_words[r_words.size()-1] += s;
-         else
-            r_words.push_back(s);
-      }
-
-      return r_words;
-   };
-
-   std::vector<std::string> vecVal = h_groupWords(val);
-
-   if (vecVal[0] != "(")
-      if (vecVal[0] != "'(")
-         if (vecVal[0] != "`(")
-            if (vecVal[0] != "~(")
-               type = Type::ATOM;
-            else type = Type::EVAL_SEXPS;
-         else type = Type::BACK_QUOTE_SEXPS;
-      else type = Type::QUOTE_SEXPS;
-   else type = Type::SEXPS; //parse normal ( (+ 3 5 6) ) expression
-
-   switch (type) {
-      case Type::ATOM:
-         NumType numType = getNumType(vecVal[0]);
-
-         if (numType == NumType::INT) {
-            type = Type::INT;
-            pVal = (void*)new int;
-            *(int*)pVal = lexical_cast<int>(vecVal[0]);
-         }
-
-         else if (numType == NumType::FLOAT) {
-            type = Type::FLOAT;
-            pVal = (void*)new float;
-            *(int*)pVal = lexical_cast<float>(vecVal[0]);
-         }
-
-         else if (contains({"true", "false"}, vecVal[0])) {
-            type = Type::BOOL;
-            pVal = (void*)new bool;
-            *(bool*)pVal = strToBool(vecVal[0]);
-         }
-
-
-      break;
-
-   }
-
-   int n_openParens, n_closeParens;
-
-   for (std::string str _in_ vecVal) {
-      //if (str[0] == '(' || ((str[0] == '\'' || str[0] == '\`') && str[]
-      //                )
-   }
-
-   //delete val;
-}
-
-
-int handleError(SSexps::ParseError error) {
-   using SSexps::ParseError;
-   using SError::ErrorLevel;
-
-   switch (error) {
-   case ParseError::NO_BEGIN_PARENTHESIS:
-      printError(ErrorLevel::BAD_INPUT,
-                 "An expression  has to start with an ' or an (",
-                 SStateMachine::line,
-                 SStateMachine::file);
-      break;
-
-   case ParseError::NO_END_PARENTHESIS:
-      printError(ErrorLevel::BAD_INPUT,
-                 "An expression has to end with an )",
-                 SStateMachine::line,
-                 SStateMachine::file);
-      break;
-
-   case ParseError::UNMATCHED_QUOTES:
-      printError(ErrorLevel::BAD_INPUT,
-                 "Unmatched quote",
-                 SStateMachine::line,
-                 SStateMachine::file);
-      break;
-
-   default:
-      printError(ErrorLevel::FATAL_ERROR,
-                 "Unkown Error has occured",
-                 SStateMachine::line,
-                 SStateMachine::file);
-      break;
-
-   }
-}
-
 
 //side effect:   if first quote character is present, changes m_start, else m_start and m_end are -1
 //return value:  true if 2 quotes are found; otherwise false
@@ -145,10 +30,120 @@ bool getNextQuote(const std::string& str, int current, int& m_start, int& m_end)
    return false;
 }
 
+void Sexps::parseExps() {
+   using boost::lexical_cast;
+
+   //I call values separated by spaces "words".
+   auto h_groupWords = [](const std::string& str) -> std::vector<std::string> {
+      std::vector<std::string> r_words;
+
+      for (int i = 0; i < str.length(); i++) {
+         std::string s;
+         for (; str[i] != ' ' && i < str.length(); i++)
+            s.push_back(str[i]);
+
+         int startQuote, endQuote; // all words in " " go together.
+         if(getNextQuote(str, i, startQuote, endQuote)) ;
+
+         //check if previous is one of the quotes or ~, and concat to this s
+         if (r_words.size() && contains({"~", "'", "`"}, r_words[r_words.size()-1]))
+            r_words[r_words.size()-1] += s;
+         else
+            r_words.push_back(s);
+      }
+
+      return r_words;
+   };
+
+   std::vector<std::string> vecVal = h_groupWords(val);
+
+   if (vecVal[0] != "(")
+      if (vecVal[0] != "'(")
+         if (vecVal[0] != "`(")
+            if (vecVal[0] != "~(")
+               type = Type::ATOM;
+            else type = Type::EVAL_SEXPS;
+         else type = Type::BACK_QUOTE_SEXPS;
+      else type = Type::QUOTE_SEXPS;
+   else type = Type::SEXPS; //parse normal ( (+ 3 5 6) ) expression
+
+   switch (type) {
+      case Type::ATOM: {
+         NumType numType = getNumType(vecVal[0]);
+
+         if (numType == NumType::INT) { //INT
+            type = Type::INT;
+            pVal = (void*)new int;
+            *(int*)pVal = lexical_cast<int>(vecVal[0]);
+         }
+
+         else if (numType == NumType::FLOAT) { //FLOAT
+            type = Type::FLOAT;
+            pVal = (void*)new float;
+            *(int*)pVal = lexical_cast<float>(vecVal[0]);
+         }
+
+         else if (contains({"true", "false"}, vecVal[0])) { //BOOL
+            type = Type::BOOL;
+            pVal = (void*)new bool;
+            *(bool*)pVal = strToBool(vecVal[0]);
+         }
+         else if (vecVal[0] == "\"") ;//string
+
+
+      } break;
+
+
+
+   }
+
+   int n_openParens, n_closeParens;
+
+   for (std::string str _in_ vecVal) {
+      //if (str[0] == '(' || ((str[0] == '\'' || str[0] == '\`') && str[]
+      //                )
+   }
+
+   //delete val;
+}
+
+
+int handleError(ParseError error) {
+   using StateMachine::line;
+   using StateMachine::file;
+   using Exception::ErrorLevel;
+
+   switch (error) {
+   case ParseError::NO_BEGIN_PARENTHESIS:
+      printError(ErrorLevel::BAD_INPUT,
+                 "An expression  has to start with an ' or an (",
+                 line, file);
+      break;
+
+   case ParseError::NO_END_PARENTHESIS:
+      printError(ErrorLevel::BAD_INPUT,
+                 "An expression has to end with an )",
+                 line, file);
+      break;
+
+   case ParseError::UNMATCHED_QUOTES:
+      printError(ErrorLevel::BAD_INPUT,
+                 "Unmatched quote",
+                 line, file);
+      break;
+
+   default:
+      printError(ErrorLevel::FATAL_ERROR,
+                 "Unkown Error has occured",
+                 line, file);
+      break;
+
+   }
+}
+
 
 //TODO: fix the removal of extra white spaces in strings ("     " becomes " ").
 std::string formatSexps(const std::string& sexpsWithSpaces) {
-   using SList::contains;
 
    std::vector<char> beforeParens = {'\'', '`', '~'};
    std::vector<char> openParens = {'(', ')'}, closeParens = {')', ']'}; //TODO
@@ -215,7 +210,3 @@ std::string formatSexps(const std::string& sexpsWithSpaces) {
 
    return h_removeExtraWhitespaces(r_sexps, 0, r_sexps.length());
 }
-
-
-}} //namespace
-

@@ -3,8 +3,8 @@
 #include "SError.h"
 #include "SStateMachine.h"
 
-namespace SLib {
-namespace SError {
+
+namespace Exception {
 
 void printError(ErrorLevel level,
                 std::string msg,
@@ -32,6 +32,3 @@ void printError(ErrorLevel level,
 }
 
 }
-} //namespace
-
-

@@ -4,14 +4,11 @@
 #include <string>
 
 //for storing errors and lines, and all the dynamic environment, like vars
-namespace SLib {
-namespace SStateMachine {
 
+namespace StateMachine {
 extern std::string file;
 extern int line;
-
-
-}} //namespace
+}
 
 
 #endif // SSTATEMACHINE_H_INCLUDED

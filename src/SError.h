@@ -3,8 +3,7 @@
 
 #include <string>
 
-namespace SLib {
-namespace SError {
+namespace Exception {
 
 ///use std::runtime_error(std::string msg)
 
@@ -21,9 +20,8 @@ void printError(ErrorLevel level = ErrorLevel::FATAL_ERROR,
                 std::string fileName = "");
 
 
-//BAD IDEA! TM
 
-//Metaprogramming to the rescue!
+//too hackish and hard-to-understand.
 template <class T>
 class invalid {};
 
@@ -43,6 +41,6 @@ struct invalid <float> {
    constexpr static float val = 42.16691234;
 };
 
-}} //namespace
+}
 
 #endif // SERROR_H_INCLUDED

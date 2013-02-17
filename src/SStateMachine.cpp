@@ -1,9 +1,7 @@
 #include "SStateMachine.h"
 
-namespace SLib {
-namespace SStateMachine {
 
+namespace StateMachine {
 std::string file = "";
 int line = 0;
-
-}} //namespace
+}

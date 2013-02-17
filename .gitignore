@@ -5,3 +5,4 @@ bin/
 obj/
 bin/Debug/LispInterpreter
 .gitignore
+spp
