@@ -1,0 +1,4 @@
+* Re-write and cleanup code to make it readable by other people
+   * Change the formatting parsing & functions
+
+* Use Lex and Yacc
