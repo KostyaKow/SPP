@@ -37,9 +37,7 @@ bool isStrInsideQuotes(int start, int end, const std::string& str);             
 class Sexps {
    friend Sexps parseExpression(const std::string& expr);
 
-
-
-   enum class Type : byte { BOOL, INT, FLOAT, CHAR, STR,  ATOM,
+   enum class Type : byte { BOOL, INT, FLOAT, CHAR, STR, ATOM, STRING,
                               QUOTE_SEXPS, BACK_QUOTE_SEXPS, EVAL_SEXPS, SEXPS };
    Type type;
 

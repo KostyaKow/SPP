@@ -1,5 +1,8 @@
 #include "SSexps.h"
 
+#include <boost/lexical_cast.hpp>
+
+
 namespace SLib {
 namespace SSexps { //S-Expression
 
@@ -8,6 +11,11 @@ void Sexps::eval() {
 }
 
 void Sexps::parseExps() {
+   using SStr::NumType;
+   using SList::contains;
+   using SStr::getNumType;
+   using boost::lexical_cast;
+
    //I call values separated by spaces "words".
    auto h_groupWords = [](const std::string& str) -> std::vector<std::string> {
       std::vector<std::string> r_words;
@@ -39,11 +47,36 @@ void Sexps::parseExps() {
       else type = Type::QUOTE_SEXPS;
    else type = Type::SEXPS; //parse normal ( (+ 3 5 6) ) expression
 
+   switch (type) {
+      case Type::ATOM:
+         NumType numType = getNumType(vecVal[0]);
 
+         if (numType == NumType::INT) {
+            type = Type::INT;
+            pVal = (void*)new int;
+            *(int*)pVal = lexical_cast<int>(vecVal[0]);
+         }
+
+         else if (numType == NumType::FLOAT) {
+            type = Type::FLOAT;
+            pVal = (void*)new float;
+            *(int*)pVal = lexical_cast<float>(vecVal[0]);
+         }
+
+         else if (contains({"true", "false"}, vecVal[0])) {
+            type = Type::BOOL;
+            pVal = (void*)new bool;
+            *(bool*)pVal = strToBool(vecVal[0]);
+         }
+
+
+      break;
+
+   }
 
    int n_openParens, n_closeParens;
 
-   for (std::string str in vecVal) {
+   for (std::string str _in_ vecVal) {
       //if (str[0] == '(' || ((str[0] == '\'' || str[0] == '\`') && str[]
       //                )
    }
