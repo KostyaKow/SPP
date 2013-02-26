@@ -2,3 +2,15 @@
    * Change the formatting parsing & functions
 
 * Use Lex and Yacc
+
+
+-----------------------------
+
+I am currently taking Stanford's Compilers class at Coursera, and I am trying to apply my knowledge to this project. This is a place to take notes, and record things that I want to add or change.
+
+* Rename
+   - "words" ( 1 2 '( ~( ) "fdsf fsd fd") should be re-named "tokens" (lexical analysis).
+   
+
+- Parsing is grouping of words. 
+- Semantic Analysis analyzes meaning.

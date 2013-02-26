@@ -33,21 +33,24 @@ bool getNextQuote(const std::string& str, int current, int& m_start, int& m_end)
 void Sexps::parseExps() {
    using boost::lexical_cast;
 
-   //I call values separated by spaces "words".
-   auto h_groupWords = [](const std::string& str) -> std::vector<std::string> {
+   auto h_groupTokens = [](const std::string& str) -> std::vector<std::string> {
       std::vector<std::string> r_words;
 
       for (int i = 0; i < str.length(); i++) {
          std::string s;
+
+         int startQuote, endQuote; // all words in " " go together.
+         if (getNextQuote(str, i, startQuote, endQuote) && i == startQuote)
+            for (; i < endQuote; i++)
+               s.push_back(str[i]);
+
+
          for (; str[i] != ' ' && i < str.length(); i++)
             s.push_back(str[i]);
 
-         int startQuote, endQuote; // all words in " " go together.
-         if(getNextQuote(str, i, startQuote, endQuote)) ;
-
          //check if previous is one of the quotes or ~, and concat to this s
-         if (r_words.size() && contains({"~", "'", "`"}, r_words[r_words.size()-1]))
-            r_words[r_words.size()-1] += s;
+         if (r_words.size() && contains( {"~", "'", "`"}, r_words[r_words.size()-1]))
+         r_words[r_words.size()-1] += s;
          else
             r_words.push_back(s);
       }
@@ -55,8 +58,9 @@ void Sexps::parseExps() {
       return r_words;
    };
 
-   std::vector<std::string> vecVal = h_groupWords(val);
+   std::vector<std::string> vecVal = h_groupTokens(val);
 
+   //if doesn't match anything then it's atom.
    if (vecVal[0] != "(")
       if (vecVal[0] != "'(")
          if (vecVal[0] != "`(")
@@ -67,46 +71,54 @@ void Sexps::parseExps() {
       else type = Type::QUOTE_SEXPS;
    else type = Type::SEXPS; //parse normal ( (+ 3 5 6) ) expression
 
-   switch (type) {
-      case Type::ATOM: {
-         NumType numType = getNumType(vecVal[0]);
 
-         if (numType == NumType::INT) { //INT
-            type = Type::INT;
-            pVal = (void*)new int;
-            *(int*)pVal = lexical_cast<int>(vecVal[0]);
-         }
+   if (type == Type::ATOM) { //if atom, figure out if BOOL, INT, FLOAT, CHAR or STR. change the type.
+      if (vecVal.size() != 1)
+         throw(string("atom with " + lexical_cast<string>(vecVal.size()) + " elements"));
 
-         else if (numType == NumType::FLOAT) { //FLOAT
-            type = Type::FLOAT;
-            pVal = (void*)new float;
-            *(int*)pVal = lexical_cast<float>(vecVal[0]);
-         }
+      NumType numType = getNumType(vecVal[0]);
 
-         else if (contains({"true", "false"}, vecVal[0])) { //BOOL
-            type = Type::BOOL;
-            pVal = (void*)new bool;
-            *(bool*)pVal = strToBool(vecVal[0]);
-         }
-         else if (vecVal[0] == "\"") ;//string
+      if (numType == NumType::INT) { //INT
+         type = Type::INT;
+         pVal = (void*)new int; //too many pointers make me confused and cause me to leak memory....
+         *(int*)pVal = lexical_cast<int>(vecVal[0]);
+      }
 
+      else if (numType == NumType::FLOAT) { //FLOAT
+         type = Type::FLOAT;
+         pVal = (void*)new float;
+         *(int*)pVal = lexical_cast<float>(vecVal[0]);
+      }
 
-      } break;
+      //NumType::NONE
+      else if (contains( {"true", "false"}, vecVal[0])) { //BOOL
+         type = Type::BOOL;
+         //pVal = (void*)new bool;
+         *(bool*)pVal = strToBool(vecVal[0]);
+      }
 
-
+      else if (vecVal[0] == "\"") { //STR
+         type = Type::STR;
+         pVal = (void*)new string;
+         *(string*)pVal = vecVal[0];
+      }
+      else if (vecVal[0] == "'") { //CHAR
+         type = Type::STR;
+         pVal = (void*)new char;
+         *(char*)pVal = vecVal[0][0];
+         if (vecVal[0].size() != 3) //fixme: right now: 'a' <--good; '\a' <--bad.
+            throw string("incorrect size of char");
+      }
 
    }
 
-   int n_openParens, n_closeParens;
+   else { //if not atom
+      for (std::string str _in_ vecVal) {
 
-   for (std::string str _in_ vecVal) {
-      //if (str[0] == '(' || ((str[0] == '\'' || str[0] == '\`') && str[]
-      //                )
+      }
    }
 
-   //delete val;
 }
-
 
 int handleError(ParseError error) {
    using StateMachine::line;
@@ -194,7 +206,7 @@ std::string formatSexps(const std::string& sexpsWithSpaces) {
          r_sexps.push_back(' ');
 
       if (sexps[i-1] == '(') //previous
-          r_sexps.push_back(' ');//insert space for previous (
+         r_sexps.push_back(' ');//insert space for previous (
 
       if (i && sexps[i] == ')' && sexps[i-1] != ' ' && !contains(beforeParens , sexps[i-1]))
          r_sexps.push_back(' ');

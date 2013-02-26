@@ -2,7 +2,7 @@ In this project, I do a lot of things that may be weird. This may be because thi
 
 ---------------------------------------
 
-		*General style*
+		*Code Notes*
 
 I mostly use CamelCase for variable, class and function names.
 
@@ -17,9 +17,13 @@ h_	- used to signify local helper functions (made with auto and lambdas).
 r_	- values returned from the function have this prefix.
 n_	- number of something
 
+I am using a hand written parser. I want to learn how to use it, but later on I will also try to use Lex and Yacc. I am using a hand-written parser because I want to learn how to do it, and write all of the interpreter by myself :)
+
+If GCC and LLVM/Clang are doing this, then don't blame me...
+
 -------------------------------------
 
-Notes about language:
+   *Notes about language*
 
 This project implements a small subset of Scheme. This is not a serious project, and will never become one. There is no optimization (such as tail recursion), and the performance is not considered. 
 
@@ -51,4 +55,6 @@ Error
 (16 3 42)
 
 For further examples look in the tests directory.
+
+
 

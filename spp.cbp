@@ -44,7 +44,6 @@
 		<Unit filename="src/SStr.h" />
 		<Unit filename="src/main.cpp" />
 		<Unit filename="src/main.h" />
-		<Unit filename="src/misc.cpp" />
 		<Unit filename="src/misc.h" />
 		<Extensions>
 			<code_completion />
