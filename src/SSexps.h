@@ -33,20 +33,22 @@ bool isStrInsideQuotes(int start, int end, const std::string& str);             
 class Sexps {
    friend Sexps parseExpression(const std::string& expr);
 
-   enum class Type : byte { BOOL, INT, FLOAT, CHAR, STR, ATOM,
-                        QUOTE_SEXPS, BACK_QUOTE_SEXPS, EVAL_SEXPS, SEXPS };
+   enum class Type : byte { BOOL, INT, FLOAT, CHAR, STR,
+                            ATOM, //NOT_ATOM
+                            QUOTE_SEXPS, BACK_QUOTE_SEXPS, EVAL_SEXPS, SEXPS };
    Type type;
 
 
-   std::string val;
+   const std::string val;
    void* pVal; //cast this to needed type
    std::vector<Sexps>* subSexps;
 
 
 public:
 
-   Sexps(const std::string &_val = 0)  {
-      val = formatSexps(_val);
+   Sexps(const std::string &_val = 0)
+      : val(formatSexps(_val))
+   {
       parseExps();
    }
 
@@ -64,9 +66,65 @@ public:
 
    inline bool isAtom() const { return isBool() || isInt() || isFloat() || isChar() || isStr(); }
 
+   std::string getVal() const {
+      return val;
+   }
+
    void eval();
    void parseExps();
 
+
+#ifdef DEBUG_SPP
+   void printType() {
+      using std::cout;
+
+      switch (type) {
+      case Type::BOOL:
+         cout << "\nBOOL";
+      break;
+
+      case Type::INT:
+         cout << "\nINT";
+      break;
+
+      case Type::FLOAT:
+         cout << "\nFLOAT";
+      break;
+
+      case Type::CHAR:
+         cout << "\nCHAR";
+      break;
+
+      case Type::STR:
+         cout << "\STR";
+      break;
+      //
+      case Type::ATOM:
+         cout << "\nATOM";
+      break;
+      //
+      case Type::QUOTE_SEXPS:
+         cout << "\nQUOTE_SEXPS";
+      break;
+
+      case Type::BACK_QUOTE_SEXPS:
+         cout << "\nBACK_QUOTE_SEXPS";
+      break;
+
+      case Type::EVAL_SEXPS:
+         cout << "\nEVAL_SEXPS";
+      break;
+
+      case Type::SEXPS:
+         cout << "\nSEXPS";
+      break;
+
+      default:
+         cout << "\ncould not find the type of sexps";
+      break;
+      }
+   }
+#endif
 };
 
 

@@ -24,6 +24,8 @@
 #include "SStateMachine.h"
 #include "SSexps.h"
 
+#include "misc.h"
+
 using namespace std;
 
 #endif // MAIN_H_INCLUDED

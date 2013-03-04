@@ -1,6 +1,9 @@
 #ifndef MISC_H_INCLUDED
 #define MISC_H_INCLUDED
 
+#define DEBUG_SPP
+
+
 #include <string>
 
 // Some C++ formatters (such as Code::Blocks's) cannoot handle :
@@ -29,5 +32,6 @@ inline bool strToBool(const std::string& str) { //hacky & undreadable; re-write
    return str == "true" ? true : str == "false" ? false : ternaryThrow("bad parameter to strToBool");
 }
 
+#define BUG ;std::cout << "."; std::cin.getline(new char[0], 0);
 
 #endif // MISC_H_INCLUDED

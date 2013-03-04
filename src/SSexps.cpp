@@ -66,8 +66,8 @@ void Sexps::parseExps() {
    vector<string> vecVal = h_groupTokens(val);
 
 
-   auto h_getTypeToken = [](const string& str) -> Type {
-      vector<string> vecVal = {str}; //delete this. quick and dirty to not change everything
+   auto h_getTypeOfToken = [&h_groupTokens](const string& str) -> Type {
+      vector<string> vecVal = h_groupTokens(str); //FIXME: delete this. quick and dirty to not change everything
 
       Type type;
 
@@ -84,6 +84,8 @@ void Sexps::parseExps() {
 
 
       if (type == Type::ATOM) { //if atom, figure out if BOOL, INT, FLOAT, CHAR or STR. change the type.
+         std::cout << "atom!!!";
+
          if (vecVal.size() != 1)
             throw(string("atom with " + lexical_cast<string>(vecVal.size()) + " elements"));
 
@@ -122,7 +124,17 @@ void Sexps::parseExps() {
          }
 
       }
+
+      return type;
    };
+
+   type = h_getTypeOfToken(val);
+
+   BUG
+
+#ifdef DEBUG_SPP
+   printType(); std::cout << "\n";
+#endif
 
    /*
    else { //if not atom
