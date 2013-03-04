@@ -26,4 +26,4 @@ Copyright 2013 Kostyantyn Kovalskyy (Konstantin Kowalski).
 
 THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE v2 (GPLv2) OR (AT YOUR OPTION) ANY LATER VERSION.
 
-Main contributor and founder: Konstantin Kowalski (Kostyantyn Kovalskyy) <kostya-kow at mail dot ru>
+Main contributor: Konstantin Kowalski (Kostyantyn Kovalskyy) <kostya-kow at mail dot ru>

@@ -1,8 +1,11 @@
 #ifndef SLIST_H_INCLUDED
 #define SLIST_H_INCLUDED
 
-#include "main.h"
 #include "SError.h"
+
+#include <vector>
+#include <iostream>
+#include <functional>
 
 /*
 usage for list:
@@ -14,14 +17,10 @@ cout << list(1.2, 2.2
 
 list('z', 'x' __ 'a');
 >letters 'z' to 'a', using x as a step value
-I <3 Haskell
 */
 
 #define __ ,
-//#define list SLib::SList::list
 
-
-//TODO: change names of args?
 template <class T, class Y = T, class Z = T>
 std::vector<T> list(T start, Y end_or_step, Z end_or_invalid = Exception::invalid<Z>::val) {
    std::vector<T> val;
@@ -66,7 +65,6 @@ std::ostream& operator <<(std::ostream& os, const std::vector<T>& n) {
    return os;
 }
 
-
 template <class T>
 std::vector<T> filter(std::function<bool(T)> pred, std::vector<T> list) {
    std::vector<T> filteredList;
@@ -77,7 +75,6 @@ for (auto n : list)
 
    return filteredList;
 }
-
 
 template <class T>
 bool contains(std::vector<T> list, T element) {

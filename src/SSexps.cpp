@@ -2,6 +2,9 @@
 
 #include <boost/lexical_cast.hpp>
 
+//This is a pretty horrible mess, and will need to be re-written.
+
+
 
 void Sexps::eval() {
 
@@ -32,12 +35,14 @@ bool getNextQuote(const std::string& str, int current, int& m_start, int& m_end)
 
 void Sexps::parseExps() {
    using boost::lexical_cast;
+   using std::vector;
+   using std::string;
 
-   auto h_groupTokens = [](const std::string& str) -> std::vector<std::string> {
-      std::vector<std::string> r_words;
+   auto h_groupTokens = [](const string& str) -> vector<string> {
+      vector<string> r_words;
 
       for (int i = 0; i < str.length(); i++) {
-         std::string s;
+         string s;
 
          int startQuote, endQuote; // all words in " " go together.
          if (getNextQuote(str, i, startQuote, endQuote) && i == startQuote)
@@ -58,65 +63,74 @@ void Sexps::parseExps() {
       return r_words;
    };
 
-   std::vector<std::string> vecVal = h_groupTokens(val);
-
-   //if doesn't match anything then it's atom.
-   if (vecVal[0] != "(")
-      if (vecVal[0] != "'(")
-         if (vecVal[0] != "`(")
-            if (vecVal[0] != "~(")
-               type = Type::ATOM;
-            else type = Type::EVAL_SEXPS;
-         else type = Type::BACK_QUOTE_SEXPS;
-      else type = Type::QUOTE_SEXPS;
-   else type = Type::SEXPS; //parse normal ( (+ 3 5 6) ) expression
+   vector<string> vecVal = h_groupTokens(val);
 
 
-   if (type == Type::ATOM) { //if atom, figure out if BOOL, INT, FLOAT, CHAR or STR. change the type.
-      if (vecVal.size() != 1)
-         throw(string("atom with " + lexical_cast<string>(vecVal.size()) + " elements"));
+   auto h_getTypeToken = [](const string& str) -> Type {
+      vector<string> vecVal = {str}; //delete this. quick and dirty to not change everything
 
-      NumType numType = getNumType(vecVal[0]);
+      Type type;
 
-      if (numType == NumType::INT) { //INT
-         type = Type::INT;
-         pVal = (void*)new int; //too many pointers make me confused and cause me to leak memory....
-         *(int*)pVal = lexical_cast<int>(vecVal[0]);
+      //if doesn't match anything then it's atom.
+      if (vecVal[0] != "(")
+         if (vecVal[0] != "'(")
+            if (vecVal[0] != "`(")
+               if (vecVal[0] != "~(")
+                  type = Type::ATOM;
+               else type = Type::EVAL_SEXPS;
+            else type = Type::BACK_QUOTE_SEXPS;
+         else type = Type::QUOTE_SEXPS;
+      else type = Type::SEXPS;
+
+
+      if (type == Type::ATOM) { //if atom, figure out if BOOL, INT, FLOAT, CHAR or STR. change the type.
+         if (vecVal.size() != 1)
+            throw(string("atom with " + lexical_cast<string>(vecVal.size()) + " elements"));
+
+         NumType numType = getNumType(vecVal[0]);
+
+         if (numType == NumType::INT) { //INT
+            type = Type::INT;
+            ///pVal = (void*)new int; //this is where the magic happens
+            ///*(int*)pVal = lexical_cast<int>(vecVal[0]);
+         }
+
+         else if (numType == NumType::FLOAT) { //FLOAT
+            type = Type::FLOAT;
+            ///pVal = (void*)new float;
+            ///*(int*)pVal = lexical_cast<float>(vecVal[0]);
+         }
+
+         //NumType::NONE
+         else if (contains( {"true", "false"}, vecVal[0])) { //BOOL
+            type = Type::BOOL;
+            //pVal = (void*)new bool;
+            ///*(bool*)pVal = strToBool(vecVal[0]);
+         }
+
+         else if (vecVal[0] == "\"") { //STR
+            type = Type::STR;
+            ///pVal = (void*)new string; //too many pointers make me confused and cause me to leak memory....
+            ///*(string*)pVal = vecVal[0];
+         }
+         else if (vecVal[0] == "'") { //CHAR
+            type = Type::STR;
+            ///pVal = (void*)new char;
+            ///*(char*)pVal = vecVal[0][0];
+            if (vecVal[0].size() != 3) //fixme: right now: 'a' <--good; '\a' <--bad.
+               throw string("incorrect size of char");
+         }
+
       }
+   };
 
-      else if (numType == NumType::FLOAT) { //FLOAT
-         type = Type::FLOAT;
-         pVal = (void*)new float;
-         *(int*)pVal = lexical_cast<float>(vecVal[0]);
-      }
-
-      //NumType::NONE
-      else if (contains( {"true", "false"}, vecVal[0])) { //BOOL
-         type = Type::BOOL;
-         //pVal = (void*)new bool;
-         *(bool*)pVal = strToBool(vecVal[0]);
-      }
-
-      else if (vecVal[0] == "\"") { //STR
-         type = Type::STR;
-         pVal = (void*)new string;
-         *(string*)pVal = vecVal[0];
-      }
-      else if (vecVal[0] == "'") { //CHAR
-         type = Type::STR;
-         pVal = (void*)new char;
-         *(char*)pVal = vecVal[0][0];
-         if (vecVal[0].size() != 3) //fixme: right now: 'a' <--good; '\a' <--bad.
-            throw string("incorrect size of char");
-      }
-
-   }
-
+   /*
    else { //if not atom
-      for (std::string str _in_ vecVal) {
-
+      for (auto str _in_ vecVal) {
+         if (str == "")
       }
    }
+   */
 
 }
 
@@ -152,7 +166,6 @@ int handleError(ParseError error) {
 
    }
 }
-
 
 //TODO: fix the removal of extra white spaces in strings ("     " becomes " ").
 std::string formatSexps(const std::string& sexpsWithSpaces) {
