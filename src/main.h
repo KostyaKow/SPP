@@ -1,6 +1,7 @@
 #ifndef MAIN_H_INCLUDED
 #define MAIN_H_INCLUDED
 
+/*
 #include <iostream>
 #include <vector>
 #include <string>
@@ -17,6 +18,7 @@
 #include <unistd.h>
 
 #include <boost/lexical_cast.hpp>
+*/
 
 #include "SList.h"
 #include "SStr.h"

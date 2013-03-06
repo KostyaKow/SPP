@@ -7,6 +7,8 @@
 #include <iostream>
 #include <functional>
 
+//TODO: Make a separate generic library for this kind of stuff?
+
 /*
 usage for list:
 

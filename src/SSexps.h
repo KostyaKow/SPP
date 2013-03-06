@@ -23,14 +23,6 @@ enum class ParseError {
 
 std::string formatSexps(const std::string& sexpsWithSpaces);
 
-//string checking
-
-/*
-***delete***
-bool isCharInQuotes(int charPlace, const std::string& str);                      //checks if char inside "quotes"
-bool isStrInsideQuotes(int start, int end, const std::string& str);              //checks if str[start]..str[end] is inside "quotes"
-*/
-
 
 class Sexps {
    friend Sexps parseExpression(const std::string& expr);
@@ -80,71 +72,43 @@ public:
    void parseExps();
 
 #ifdef DEBUG_SPP
-
-   void printVal() {
-
-   }
-
-   void printType() {
-      using std::cout;
-
-      switch (type) {
-      case Type::BOOL:
-         cout << "BOOL\n";
-      break;
-
-      case Type::INT:
-         cout << "INT\n";
-      break;
-
-      case Type::FLOAT:
-         cout << "FLOAT\n";
-      break;
-
-      case Type::CHAR:
-         cout << "CHAR\n";
-      break;
-
-      case Type::STR:
-         cout << "STR\n";
-      break;
-      //
-      case Type::ATOM:
-         cout << "ATOM\n";
-      break;
-      //
-      case Type::QUOTE_SEXPS:
-         cout << "QUOTE_SEXPS\n";
-      break;
-
-      case Type::BACK_QUOTE_SEXPS:
-         cout << "BACK_QUOTE_SEXPS\n";
-      break;
-
-      case Type::EVAL_SEXPS:
-         cout << "EVAL_SEXPS\n";
-      break;
-
-      case Type::SEXPS:
-         cout << "SEXPS\n";
-      break;
-
-      default: //empty, etc.
-         cout << "^^ could not find the type of sexps\n";
-      break;
-      }
-   }
+   void printVal();
+   void printType();
 #endif
+
 };
-
-
-
-
 
 int handleError(ParseError error);
 
+class Function {
+   Sexps _Function;
+
+   struct function {
+      std::string name;
+      Sexps parameter;
+      Sexps body;
+   } function;
+
+   //std::function<SExps(SExps)> eval; //runtime??
+
+public:
+
+};
+
+//why not just do function pointers
+/*template <class return_type = Exception::invalid, class p1 = Exception::invalid, class p2 = Exception::invalid>
+class builtInFunction : public Function
+{
+   std::function<Sexps(Sexps)> eval;
+public:
+   builtInFunction(function<SExps(SExps)> _eval) {
+      eval = _eval;
+   }
+};*/
+
 
 /*
+TODO: Merge this into main code, and delete the ugly comment wall...
 
 class SExps {
     bool atom;
@@ -177,24 +141,6 @@ public:
     bool isChar()   { return character;     }
 
     virtual bool isBuiltInFunction() { return false; }
-
-
-};
-
-class builtInFunction : public SExps
-{
-    string name;
-    SExps parameter;
-
-    bool isBuiltInFunction() { return true; }
-
-public:
-
-    function<SExps(SExps)> eval;
-
-    builtInFunction(function<SExps(SExps)> _eval) {
-        eval = _eval;
-    }
 
 
 };

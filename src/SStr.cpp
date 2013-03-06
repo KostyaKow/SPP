@@ -3,10 +3,8 @@
 
 #include "misc.h"
 
-
-
-bool isDigit(char c) { //messy, but fast
-   if (c >= '0' && c <= '9') //if (SList::contains(SList::list('0' __ '9'), c))
+bool isDigit(char c) {
+   if (c >= '0' && c <= '9') //can also do: if (SList::contains(SList::list('0' __ '9'), c)), but this would be slower
       return true;
    else return false;
 }
@@ -41,7 +39,7 @@ bool isInt(std::string s) {
 }
 
 
-NumType getNumType(std::string s) {
+NumType getNumType(std::string s) { //ehh...ugly
    if (s.length() < 1)
       return NumType::NONE;
 

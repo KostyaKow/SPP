@@ -1,7 +1,7 @@
 #ifndef MISC_H_INCLUDED
 #define MISC_H_INCLUDED
 
-//#define DEBUG_SPP
+#define DEBUG_SPP
 
 
 #include <string>
@@ -10,16 +10,8 @@
 // in C++11 range-based for loops, so I use _in_, in place of :
 #define _in_ :
 
-typedef char byte;
 
-//example for function that returns true if someBool is true, otherwise throws exception:
-// bool test(bool someBool) {
-//   return someBool ? true : ternaryThrow("someBool is false");
-// }
-inline bool ternaryThrow(std::string str) {
-   throw str;
-   return false;
-}
+typedef char byte;
 
 inline bool inRange(int b, int a, int c) {
     if (b >= a && b <= c)
@@ -27,12 +19,21 @@ inline bool inRange(int b, int a, int c) {
     else return false;
 }
 
+//I was pretty stoned when I wrote previous version..
+inline bool strToBool(const std::string& str) {
+   if (str == "true")
+      return true;
+   if (str == "false")
+      return false;
 
-inline bool strToBool(const std::string& str) { //hacky & undreadable; re-write
-   return str == "true" ? true : str == "false" ? false : ternaryThrow("bad parameter to strToBool");
+   else
+      throw "bad parameter to StrToBool";
+   return false;
 }
 
 #ifdef DEBUG_SPP
+
+//Debug print
 #define BUG(x) ;std::cout << "^^ "#x"\n"; //std::cin.getline(new char[0], 0); std::cout << "\n";
 #else
 #define BUG(x)

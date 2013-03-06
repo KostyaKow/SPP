@@ -12,7 +12,7 @@ void Sexps::eval() {
 
 //side effect:   if first quote character is present, changes m_start, else m_start and m_end are -1
 //return value:  true if 2 quotes are found; otherwise false
-bool getNextQuote(const std::string& str, int current, int& m_start, int& m_end) { //FIXME: change to return a struct of bool * start * end
+bool getNextQuote(const std::string& str, uint current, int& m_start, int& m_end) { //FIXME: change to return a struct of bool * start * end
    m_start = m_end = -1;
    if (current > str.length())
       return false;
@@ -188,11 +188,9 @@ int handleError(ParseError error) {
    }
 }
 
-//TODO: fix the removal of extra white spaces in strings ("     " becomes " ").
 std::string formatSexps(const std::string& sexpsWithSpaces) {
-
    std::vector<char> beforeParens = {'\'', '`', '~'};
-   std::vector<char> openParens = {'(', ')'}, closeParens = {')', ']'}; //TODO
+   std::vector<char> openParens = {'(', ')'}, closeParens = {')', ']'};
 
    //removes extra whitespaces between words (when there is more then 1). Disgregards extra white-spaces in quotes. Also removes whitespaces between ' and ( (~(, `().
    auto h_removeExtraWhitespaces = [&](const std::string& str, int start, int end) -> std::string {
@@ -229,7 +227,6 @@ std::string formatSexps(const std::string& sexpsWithSpaces) {
          if (m_quoteStart != -1) throw std::runtime_error("there is a start quote (\"); but no end-quote");
 
       if (sexps[i] == '\'' || sexps[i] == '`' || sexps[i] == '~') {
-         //if (i && sexps[i-1] != ' ') r_sexps.push_back(' ');
          if (sexps[i+1] == ' ') {
             r_sexps.push_back(sexps[i]);
             i++; continue;
@@ -245,8 +242,6 @@ std::string formatSexps(const std::string& sexpsWithSpaces) {
       if (i && sexps[i] == ')' && sexps[i-1] != ' ' && !contains(beforeParens , sexps[i-1]))
          r_sexps.push_back(' ');
 
-      //r_sexps.push_back(sexps[i]);
-
       if (i == m_quoteStart)
          while(i != m_quoteEnd)
             r_sexps.push_back(sexps[i++]);
@@ -256,3 +251,60 @@ std::string formatSexps(const std::string& sexpsWithSpaces) {
 
    return h_removeExtraWhitespaces(r_sexps, 0, r_sexps.length());
 }
+
+#ifdef DEBUG_SPP
+
+void Sexps::printVal() {}
+
+void Sexps::printType() {
+   using std::cout;
+
+   switch (type) {
+   case Type::BOOL:
+      cout << "BOOL\n";
+   break;
+
+   case Type::INT:
+      cout << "INT\n";
+   break;
+
+   case Type::FLOAT:
+      cout << "FLOAT\n";
+   break;
+
+   case Type::CHAR:
+      cout << "CHAR\n";
+   break;
+
+   case Type::STR:
+      cout << "STR\n";
+   break;
+   //
+   case Type::ATOM:
+      cout << "ATOM\n";
+   break;
+   //
+   case Type::QUOTE_SEXPS:
+      cout << "QUOTE_SEXPS\n";
+   break;
+
+   case Type::BACK_QUOTE_SEXPS:
+      cout << "BACK_QUOTE_SEXPS\n";
+   break;
+
+   case Type::EVAL_SEXPS:
+      cout << "EVAL_SEXPS\n";
+   break;
+
+   case Type::SEXPS:
+      cout << "SEXPS\n";
+   break;
+
+   default: //TODO: add other types.
+      cout << "^^ could not find the type of sexps\n";
+   break;
+   }
+}
+#endif
+
+
