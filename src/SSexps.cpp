@@ -70,9 +70,15 @@ void Sexps::parseExps() {
    auto h_getTypeOfToken = [&h_groupTokens](const string& str) -> Type {
       vector<string> vecVal = h_groupTokens(str); //FIXME: delete this. quick and dirty to not change everything
 
-      BUG(grouped words)
+#ifdef DEBUG_SPP
+      BUG(grouped words) //ugh, I am stupid. I was trying to access element o fempty vector...
+      std::cout << "^^ there is " << vecVal.size() << " tokens\n";
+#endif
 
       Type type;
+
+      if (!vecVal.size())
+         return Type::EMPTY;
 
       //if doesn't match anything then it's atom.
       if (vecVal[0] != "(")
@@ -88,7 +94,7 @@ void Sexps::parseExps() {
       BUG(matched stuff)
 
       if (type == Type::ATOM) { //if atom, figure out if BOOL, INT, FLOAT, CHAR or STR. change the type.
-         std::cout << "atom!!!";
+         std::cout << "atom!!!\n";
 
          if (vecVal.size() != 1)
             throw(string("atom with " + lexical_cast<string>(vecVal.size()) + " elements"));

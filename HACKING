@@ -49,4 +49,4 @@ Error
 For further examples look in the tests directory.
 
 
-
+* Each cout sets up space for next output (cout << "stuff\n")

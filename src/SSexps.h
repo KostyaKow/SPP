@@ -4,8 +4,10 @@
 #include <memory>
 #include <stdexcept>
 
-#include <vector>
 #include <string>
+#include <vector>
+#include <map>
+#include <tuple>
 
 #include "SStr.h"
 #include "SList.h"
@@ -34,15 +36,17 @@ class Sexps {
    friend Sexps parseExpression(const std::string& expr);
 
    enum class Type : byte { BOOL, INT, FLOAT, CHAR, STR,
-                            ATOM, //NOT_ATOM
+                            ATOM, EMPTY, //NOT_ATOM
                             QUOTE_SEXPS, BACK_QUOTE_SEXPS, EVAL_SEXPS, SEXPS };
    Type type;
 
-
    const std::string val;
-   void* pVal; //cast this to needed type
-   std::vector<Sexps>* subSexps;
 
+   void* pVal; //cast this to needed type
+
+   std::tuple<Type, void*, std::string> typedVal; //TODO: delete the other things (string val, and void *pVal and Type type)
+
+   std::vector<Sexps>* subSexps;
 
 public:
 
@@ -52,6 +56,7 @@ public:
       parseExps();
    }
 
+   /* TODO: delete?
    inline bool isQuoted()     const { return type == Type::QUOTE_SEXPS;       }
    inline bool isBackQuoted() const { return type == Type::BACK_QUOTE_SEXPS;  }
    inline bool isEvaled()     const { return type == Type::EVAL_SEXPS;        }
@@ -65,6 +70,7 @@ public:
    inline bool isStr()        const { return type == Type::STR;   }
 
    inline bool isAtom() const { return isBool() || isInt() || isFloat() || isChar() || isStr(); }
+   */
 
    std::string getVal() const {
       return val;
@@ -73,54 +79,58 @@ public:
    void eval();
    void parseExps();
 
-
 #ifdef DEBUG_SPP
+
+   void printVal() {
+
+   }
+
    void printType() {
       using std::cout;
 
       switch (type) {
       case Type::BOOL:
-         cout << "\nBOOL";
+         cout << "BOOL\n";
       break;
 
       case Type::INT:
-         cout << "\nINT";
+         cout << "INT\n";
       break;
 
       case Type::FLOAT:
-         cout << "\nFLOAT";
+         cout << "FLOAT\n";
       break;
 
       case Type::CHAR:
-         cout << "\nCHAR";
+         cout << "CHAR\n";
       break;
 
       case Type::STR:
-         cout << "\STR";
+         cout << "STR\n";
       break;
       //
       case Type::ATOM:
-         cout << "\nATOM";
+         cout << "ATOM\n";
       break;
       //
       case Type::QUOTE_SEXPS:
-         cout << "\nQUOTE_SEXPS";
+         cout << "QUOTE_SEXPS\n";
       break;
 
       case Type::BACK_QUOTE_SEXPS:
-         cout << "\nBACK_QUOTE_SEXPS";
+         cout << "BACK_QUOTE_SEXPS\n";
       break;
 
       case Type::EVAL_SEXPS:
-         cout << "\nEVAL_SEXPS";
+         cout << "EVAL_SEXPS\n";
       break;
 
       case Type::SEXPS:
-         cout << "\nSEXPS";
+         cout << "SEXPS\n";
       break;
 
-      default:
-         cout << "\ncould not find the type of sexps";
+      default: //empty, etc.
+         cout << "^^ could not find the type of sexps\n";
       break;
       }
    }

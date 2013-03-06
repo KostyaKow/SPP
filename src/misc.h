@@ -1,7 +1,7 @@
 #ifndef MISC_H_INCLUDED
 #define MISC_H_INCLUDED
 
-#define DEBUG_SPP
+//#define DEBUG_SPP
 
 
 #include <string>
@@ -32,6 +32,10 @@ inline bool strToBool(const std::string& str) { //hacky & undreadable; re-write
    return str == "true" ? true : str == "false" ? false : ternaryThrow("bad parameter to strToBool");
 }
 
-#define BUG(x) ;std::cout << "\n"#x; std::cin.getline(new char[0], 0); std::cout << "\n";
+#ifdef DEBUG_SPP
+#define BUG(x) ;std::cout << "^^ "#x"\n"; //std::cin.getline(new char[0], 0); std::cout << "\n";
+#else
+#define BUG(x)
+#endif
 
 #endif // MISC_H_INCLUDED
