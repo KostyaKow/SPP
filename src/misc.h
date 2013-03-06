@@ -32,6 +32,6 @@ inline bool strToBool(const std::string& str) { //hacky & undreadable; re-write
    return str == "true" ? true : str == "false" ? false : ternaryThrow("bad parameter to strToBool");
 }
 
-#define BUG ;std::cout << "."; std::cin.getline(new char[0], 0);
+#define BUG(x) ;std::cout << "\n"#x; std::cin.getline(new char[0], 0); std::cout << "\n";
 
 #endif // MISC_H_INCLUDED
