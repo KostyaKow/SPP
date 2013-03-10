@@ -30,14 +30,10 @@ class Sexps {
    enum class Type : byte { BOOL, INT, FLOAT, CHAR, STR,
                             ATOM, EMPTY, //NOT_ATOM
                             QUOTE_SEXPS, BACK_QUOTE_SEXPS, EVAL_SEXPS, SEXPS };
-   Type type;
-
-   const std::string val;
-
-   void* pVal; //cast this to needed type
-
-   std::tuple<Type, void*, std::string> typedVal; //TODO: delete the other things (string val, and void *pVal and Type type)
-
+   Type tokenClass;
+   const std::string strLexeme;
+   void* ptrLexeme; //cast this to needed type
+   std::tuple<Type, void*, std::string> token; //TODO: delete the other things (string val, and void *pVal and Type type)
    std::vector<Sexps>* subSexps;
 
 public:
@@ -47,22 +43,6 @@ public:
    {
       parseExps();
    }
-
-   /* TODO: delete?
-   inline bool isQuoted()     const { return type == Type::QUOTE_SEXPS;       }
-   inline bool isBackQuoted() const { return type == Type::BACK_QUOTE_SEXPS;  }
-   inline bool isEvaled()     const { return type == Type::EVAL_SEXPS;        }
-
-   inline bool isSexps()      const { return type == Type::SEXPS; } //normal
-
-   inline bool isBool()       const { return type == Type::BOOL;  }
-   inline bool isInt()        const { return type == Type::INT;   }
-   inline bool isFloat()      const { return type == Type::FLOAT; }
-   inline bool isChar()       const { return type == Type::CHAR;  }
-   inline bool isStr()        const { return type == Type::STR;   }
-
-   inline bool isAtom() const { return isBool() || isInt() || isFloat() || isChar() || isStr(); }
-   */
 
    std::string getVal() const {
       return val;
@@ -81,30 +61,33 @@ public:
 int handleError(ParseError error);
 
 class Function {
-   Sexps _Function;
 
-   struct function {
+   struct Function_struct {
+      Function_struct() = default;
+      Function_struct(std::string _name, Sexps _args, Sexps _body) : name(_name), args(_args), body(_body) {}
+      Function_struct(const Function_struct& other) : name(other.name), args(other.args), body(other.body) {}
+
       std::string name;
-      Sexps parameter;
+      Sexps args;
       Sexps body;
-   } function;
+
+   } function_struct;
 
    //std::function<SExps(SExps)> eval; //runtime??
+   void* buildInFunction;
 
 public:
+
+   Function() = default;
+   Function(const Function_struct& _function_struct) : function_struct(_function_struct) {}
+   Function(std::string _name, Sexps _args, Sexps _body) : function_struct(_name, _args, _body) {}
+   Function(void* _buildInFunction) : buildInFunction(_buildInFunction) {}
+
+   Sexps eval(Sexps args) {
+
+   }
 
 };
-
-//why not just do function pointers
-/*template <class return_type = Exception::invalid, class p1 = Exception::invalid, class p2 = Exception::invalid>
-class builtInFunction : public Function
-{
-   std::function<Sexps(Sexps)> eval;
-public:
-   builtInFunction(function<SExps(SExps)> _eval) {
-      eval = _eval;
-   }
-};*/
 
 
 /*
