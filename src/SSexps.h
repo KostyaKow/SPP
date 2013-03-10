@@ -27,33 +27,40 @@ std::string formatSexps(const std::string& sexpsWithSpaces);
 class Sexps {
    friend Sexps parseExpression(const std::string& expr);
 
-   enum class Type : byte { BOOL, INT, FLOAT, CHAR, STR,
+   enum class TokenClass : byte { BOOL, INT, FLOAT, CHAR, STR,
                             ATOM, EMPTY, //NOT_ATOM
                             QUOTE_SEXPS, BACK_QUOTE_SEXPS, EVAL_SEXPS, SEXPS };
-   Type tokenClass;
-   const std::string strLexeme;
+   TokenClass tokenClass;
+   std::string strLexeme;
    void* ptrLexeme; //cast this to needed type
-   std::tuple<Type, void*, std::string> token; //TODO: delete the other things (string val, and void *pVal and Type type)
    std::vector<Sexps>* subSexps;
 
 public:
 
-   Sexps(const std::string &_val = 0)
-      : val(formatSexps(_val))
+   Sexps(std::string _strLexeme = 0)
+      : strLexeme(formatSexps(_strLexeme))
    {
       parseExps();
    }
 
-   std::string getVal() const {
-      return val;
+   ~Sexps() {
+      delete ptrLexeme;
+      delete[] subSexps;
    }
 
-   void eval();
+   std::string getStrLexeme() const {
+      return strLexeme;
+   }
+
+   //constructs new Sexps.
+   //#@$!@#@#$#@$%$#@^$&#*(#$ wtf...e
+   virtual Sexps eval();
+
    void parseExps();
 
 #ifdef DEBUG_SPP
    void printVal();
-   void printType();
+   void printTokenClass();
 #endif
 
 };
@@ -83,63 +90,8 @@ public:
    Function(std::string _name, Sexps _args, Sexps _body) : function_struct(_name, _args, _body) {}
    Function(void* _buildInFunction) : buildInFunction(_buildInFunction) {}
 
-   Sexps eval(Sexps args) {
-
-   }
+   Sexps eval(Sexps args) {}
 
 };
-
-
-/*
-TODO: Merge this into main code, and delete the ugly comment wall...
-
-class SExps {
-    bool atom;
-    bool integer;
-    bool floatingPoint;
-    bool character;
-
-    unique_ptr< vector<SExps> > val;
-    unique_ptr<string> strVal;
-
-public:
-
-    unique_ptr< vector<SExps> > getVal()  { return ;  }
-    unique_ptr<string> getStrVal()      { return unique_ptr(strVal);     }
-
-    SExps(int _val)       { val.push_back((string)_val); }
-    SExps(vector<SExps> _val)    { val->swap(_val); }
-    SExps(SExps& _this) {  *this = &_this; }
-
-    SExps(SExps* _this)
-                    : atom(_this->atom), integer(_this->integer), floatingPoint(_this->floatingPoint), character(_this->character),
-                      val(_this->val), strVal(_this->strVal)
-                    { }
-
-
-    bool isAtom()   { return atom; }
-
-    bool isInt()    { return integer;       }
-    bool isFloat()  { return floatingPoint; }
-    bool isChar()   { return character;     }
-
-    virtual bool isBuiltInFunction() { return false; }
-
-
-};
-
-int main()
-{
-    builtInFunction t(
-                      [](SExps exps) -> SExps { cout << exps->getVal; return exps->getVal(); }
-                      );
-
-    cout << "Hello world!" << endl;
-    return 0;
-}*/
-
-
-
-//.................
 
 #endif // SSEXPS_H_INCLUDED

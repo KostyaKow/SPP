@@ -2,7 +2,7 @@
 
 int main()  {
    for (string input; input != "quit"; getline(cin, input)) {
-      cout << "lexed sexps: " << Sexps(input).getVal() << "\n\n$ ";
+      cout << "lexed sexps: " << Sexps(input).getStrLexeme() << "\n\n$ ";
    }
 
    return 0;

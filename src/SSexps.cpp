@@ -1,13 +1,23 @@
 #include "SSexps.h"
-
 #include <boost/lexical_cast.hpp>
 
-//This is a pretty horrible mess, and will need to be re-written.
+Sexps Sexps::eval() {
 
+   switch(tokenClass) {
+   case TokenClass::QUOTE_SEXPS:
+      return;
+   break;
 
+   //it would be better to write this in Lisp itself... Is it possible to expose Lisp function in C++ code?
+   case TokenClass::BACK_QUOTE_SEXPS:
+      std::string _new_;
+      for (Sexps s : *subSexps)
+         if(s.getStrLexeme()[0] == '~')
+            _new_.append(s.eval().getStrLexeme());
+      return Sexps(_new_);
+   break;
 
-void Sexps::eval() {
-
+   }
 }
 
 //side effect:   if first quote character is present, changes m_start, else m_start and m_end are -1
@@ -38,13 +48,13 @@ void Sexps::parseExps() {
    using std::vector;
    using std::string;
 
-   auto h_groupTokens = [](const string& str) -> vector<string> {
-      vector<string> r_words;
+   auto h_groupLexemes = [](const string& str) -> vector<string> {
+      vector<string> r_lexemes;
 
       for (int i = 0; i < str.length(); i++) {
          string s;
 
-         int startQuote, endQuote; // all words in " " go together.
+         int startQuote, endQuote; // all lexemes in " " go together.
          if (getNextQuote(str, i, startQuote, endQuote) && i == startQuote)
             for (; i < endQuote; i++)
                s.push_back(str[i]);
@@ -54,46 +64,46 @@ void Sexps::parseExps() {
             s.push_back(str[i]);
 
          //check if previous is one of the quotes or ~, and concat to this s
-         if (r_words.size() && contains( {"~", "'", "`"}, r_words[r_words.size()-1]))
-         r_words[r_words.size()-1] += s;
+         if (r_lexemes.size() && contains( {"~", "'", "`"}, r_lexemes[r_lexemes.size()-1]))
+         r_lexemes[r_lexemes.size()-1] += s;
          else
-            r_words.push_back(s);
+            r_lexemes.push_back(s);
       }
 
-      return r_words;
+      return r_lexemes;
    };
 
-   vector<string> vecVal = h_groupTokens(val);
+   vector<string> vecVal = h_groupLexemes(strLexeme);
 
-   BUG(grouped tokens)
+   BUG(grouped lexemes)
 
-   auto h_getTypeOfToken = [&h_groupTokens](const string& str) -> Type {
-      vector<string> vecVal = h_groupTokens(str); //FIXME: delete this. quick and dirty to not change everything
+   auto h_getTypeOfToken = [&h_groupLexemes](const string& str) -> TokenClass {
+      vector<string> vecVal = h_groupLexemes(str); //FIXME: delete this. quick and dirty to not change everything
 
 #ifdef DEBUG_SPP
       BUG(grouped words) //ugh, I am stupid. I was trying to access element o fempty vector...
       std::cout << "^^ there is " << vecVal.size() << " tokens\n";
 #endif
 
-      Type type;
+      TokenClass tokenClass;
 
       if (!vecVal.size())
-         return Type::EMPTY;
+         return TokenClass::EMPTY;
 
       //if doesn't match anything then it's atom.
       if (vecVal[0] != "(")
          if (vecVal[0] != "'(")
             if (vecVal[0] != "`(")
                if (vecVal[0] != "~(")
-                  type = Type::ATOM;
-               else type = Type::EVAL_SEXPS;
-            else type = Type::BACK_QUOTE_SEXPS;
-         else type = Type::QUOTE_SEXPS;
-      else type = Type::SEXPS;
+                  tokenClass = TokenClass::ATOM;
+               else tokenClass = TokenClass::EVAL_SEXPS;
+            else tokenClass = TokenClass::BACK_QUOTE_SEXPS;
+         else tokenClass = TokenClass::QUOTE_SEXPS;
+      else tokenClass = TokenClass::SEXPS;
 
       BUG(matched stuff)
 
-      if (type == Type::ATOM) { //if atom, figure out if BOOL, INT, FLOAT, CHAR or STR. change the type.
+      if (tokenClass == TokenClass::ATOM) { //if atom, figure out if BOOL, INT, FLOAT, CHAR or STR. change the type.
          std::cout << "atom!!!\n";
 
          if (vecVal.size() != 1)
@@ -102,31 +112,31 @@ void Sexps::parseExps() {
          NumType numType = getNumType(vecVal[0]);
 
          if (numType == NumType::INT) { //INT
-            type = Type::INT;
+            tokenClass = TokenClass::INT;
             ///pVal = (void*)new int; //this is where the magic happens
             ///*(int*)pVal = lexical_cast<int>(vecVal[0]);
          }
 
          else if (numType == NumType::FLOAT) { //FLOAT
-            type = Type::FLOAT;
+            tokenClass = TokenClass::FLOAT;
             ///pVal = (void*)new float;
             ///*(int*)pVal = lexical_cast<float>(vecVal[0]);
          }
 
-         //NumType::NONE
+         //NumTokenClass::NONE
          else if (contains( {"true", "false"}, vecVal[0])) { //BOOL
-            type = Type::BOOL;
+            tokenClass = TokenClass::BOOL;
             //pVal = (void*)new bool;
             ///*(bool*)pVal = strToBool(vecVal[0]);
          }
 
          else if (vecVal[0] == "\"") { //STR
-            type = Type::STR;
+            tokenClass = TokenClass::STR;
             ///pVal = (void*)new string; //too many pointers make me confused and cause me to leak memory....
             ///*(string*)pVal = vecVal[0];
          }
          else if (vecVal[0] == "'") { //CHAR
-            type = Type::STR;
+            tokenClass = TokenClass::STR;
             ///pVal = (void*)new char;
             ///*(char*)pVal = vecVal[0][0];
             if (vecVal[0].size() != 3) //fixme: right now: 'a' <--good; '\a' <--bad.
@@ -135,14 +145,14 @@ void Sexps::parseExps() {
 
       }
 
-      return type;
+      return tokenClass;
    };
 
-   type = h_getTypeOfToken(val);
+   tokenClass = h_getTypeOfToken(strLexeme);
 
 
 #ifdef DEBUG_SPP
-   printType(); std::cout << "\n";
+   printTokenClass(); std::cout << "\n";
 #endif
 
    /*
@@ -165,25 +175,25 @@ int handleError(ParseError error) {
       printError(ErrorLevel::BAD_INPUT,
                  "An expression  has to start with an ' or an (",
                  line, file);
-      break;
+   break;
 
    case ParseError::NO_END_PARENTHESIS:
       printError(ErrorLevel::BAD_INPUT,
                  "An expression has to end with an )",
                  line, file);
-      break;
+   break;
 
    case ParseError::UNMATCHED_QUOTES:
       printError(ErrorLevel::BAD_INPUT,
                  "Unmatched quote",
                  line, file);
-      break;
+   break;
 
    default:
       printError(ErrorLevel::FATAL_ERROR,
                  "Unkown Error has occured",
                  line, file);
-      break;
+   break;
 
    }
 }
@@ -256,52 +266,52 @@ std::string formatSexps(const std::string& sexpsWithSpaces) {
 
 void Sexps::printVal() {}
 
-void Sexps::printType() {
+void Sexps::printTokenClass() {
    using std::cout;
 
-   switch (type) {
-   case Type::BOOL:
+   switch (tokenClass) {
+   case TokenClass::BOOL:
       cout << "BOOL\n";
    break;
 
-   case Type::INT:
+   case TokenClass::INT:
       cout << "INT\n";
    break;
 
-   case Type::FLOAT:
+   case TokenClass::FLOAT:
       cout << "FLOAT\n";
    break;
 
-   case Type::CHAR:
+   case TokenClass::CHAR:
       cout << "CHAR\n";
    break;
 
-   case Type::STR:
+   case TokenClass::STR:
       cout << "STR\n";
    break;
    //
-   case Type::ATOM:
+   case TokenClass::ATOM:
       cout << "ATOM\n";
    break;
    //
-   case Type::QUOTE_SEXPS:
+   case TokenClass::QUOTE_SEXPS:
       cout << "QUOTE_SEXPS\n";
    break;
 
-   case Type::BACK_QUOTE_SEXPS:
+   case TokenClass::BACK_QUOTE_SEXPS:
       cout << "BACK_QUOTE_SEXPS\n";
    break;
 
-   case Type::EVAL_SEXPS:
+   case TokenClass::EVAL_SEXPS:
       cout << "EVAL_SEXPS\n";
    break;
 
-   case Type::SEXPS:
+   case TokenClass::SEXPS:
       cout << "SEXPS\n";
    break;
 
-   default: //TODO: add other types.
-      cout << "^^ could not find the type of sexps\n";
+   default: //TODO: add other tokenClasss.
+      cout << "^^ could not find the tokenClass of sexps\n";
    break;
    }
 }
