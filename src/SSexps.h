@@ -29,7 +29,7 @@ class Sexps {
 
    enum class TokenClass : byte { BOOL, INT, FLOAT, CHAR, STR,
                             ATOM, EMPTY, //NOT_ATOM
-                            QUOTE_SEXPS, BACK_QUOTE_SEXPS, EVAL_SEXPS, SEXPS };
+                            QUOTE_SEXPS, BACK_QUOTE_SEXPS, EVAL_SEXPS, SEXPS }; //EVAL_SEXPS is ~(sexps)
    TokenClass tokenClass;
    std::string strLexeme;
    void* ptrLexeme; //cast this to needed type
@@ -52,8 +52,6 @@ public:
       return strLexeme;
    }
 
-   //constructs new Sexps.
-   //#@$!@#@#$#@$%$#@^$&#*(#$ wtf...e
    virtual Sexps eval();
 
    void parseExps();

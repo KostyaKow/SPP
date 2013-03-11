@@ -5,7 +5,8 @@ Sexps Sexps::eval() {
 
    switch(tokenClass) {
    case TokenClass::QUOTE_SEXPS:
-      return;
+   case TokenClass::EMPTY:
+      return *this;
    break;
 
    //it would be better to write this in Lisp itself... Is it possible to expose Lisp function in C++ code?
@@ -15,6 +16,40 @@ Sexps Sexps::eval() {
          if(s.getStrLexeme()[0] == '~')
             _new_.append(s.eval().getStrLexeme());
       return Sexps(_new_);
+   break;
+
+   case TokenClass::EVAL_SEXPS:
+
+   break;
+
+   case TokenClass::SEXPS:
+
+   break;
+
+   case TokenClass::ATOM:
+      switch (tokenClass) {
+      case TokenClass::BOOL:
+
+      break;
+
+      case TokenClass::INT:
+
+      break;
+
+      case TokenClass::FLOAT:
+
+      break;
+
+
+      case TokenClass::CHAR:
+
+      break;
+
+      case TokenClass::STR:
+
+      break;
+      }
+
    break;
 
    }
@@ -103,6 +138,7 @@ void Sexps::parseExps() {
 
       BUG(matched stuff)
 
+      //it would be faster to do type evals here, but it would also make it even uglier...
       if (tokenClass == TokenClass::ATOM) { //if atom, figure out if BOOL, INT, FLOAT, CHAR or STR. change the type.
          std::cout << "atom!!!\n";
 
