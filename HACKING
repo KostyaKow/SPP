@@ -17,7 +17,7 @@ n_	- number of something
 
    *Notes about language*
 
-This project implements a small small Lisp dialect somewhat similar to Scheme. This is not a serious project, and will never become one. There is no optimization (such as tail recursion), and almsot no library.
+This project implements a small small Lisp. 
 
 
 I use Clojure style syntax to evaluate only part of the list, i.e.
@@ -48,5 +48,4 @@ Error
 
 For further examples look in the tests directory.
 
-
-* Each cout sets up space for next output (cout << "stuff\n")
+Also, for now, there is no negative numbers ;)

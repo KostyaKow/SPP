@@ -3,55 +3,41 @@
 
 Sexps Sexps::eval() {
 
+   std::string _new_;
+
    switch(tokenClass) {
-   case TokenClass::QUOTE_SEXPS:
-   case TokenClass::EMPTY:
-      return *this;
-   break;
 
-   //it would be better to write this in Lisp itself... Is it possible to expose Lisp function in C++ code?
-   case TokenClass::BACK_QUOTE_SEXPS:
-      std::string _new_;
-      for (Sexps s : *subSexps)
-         if(s.getStrLexeme()[0] == '~')
-            _new_.append(s.eval().getStrLexeme());
-      return Sexps(_new_);
-   break;
-
-   case TokenClass::EVAL_SEXPS:
-
-   break;
-
-   case TokenClass::SEXPS:
-
-   break;
-
-   case TokenClass::ATOM:
-      switch (tokenClass) {
-      case TokenClass::BOOL:
-
-      break;
-
-      case TokenClass::INT:
-
-      break;
-
-      case TokenClass::FLOAT:
-
+      case TokenClass::QUOTE_SEXPS: case TokenClass::EMPTY:
+         return new Sexps(*this);
       break;
 
 
-      case TokenClass::CHAR:
-
+      case TokenClass::BACK_QUOTE_SEXPS: //check is sub sexps have ~ in front, and if they do, eval() them.
+         for (Sexps s : *subSexps)
+            if(s.getStrLexeme()[0] == '~')
+               _new_.append(s.eval().getStrLexeme());
+         return Sexps(_new_);
       break;
 
-      case TokenClass::STR:
 
+      //~ and normal Sexps -- (). all the juicy stuff is here:
+      case TokenClass::EVAL_SEXPS: case TokenClass::SEXPS: {
+         int begin = 0;
+         while (strLexeme[begin] != '(') begin++;
+
+         if (!isAtom()) {
+            for (Sexps s : *subSexps);
+         }
+
+      } break;
+
+      case TokenClass::ATOM:
+         return new Sexps(*this);
       break;
-      }
 
-   break;
-
+      default:
+         return new Sexps(*this);
+      break;
    }
 }
 

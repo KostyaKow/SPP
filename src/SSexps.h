@@ -43,9 +43,19 @@ public:
       parseExps();
    }
 
+   Sexps(const Sexps& other)
+      : tokenClass(other.tokenClass), strLexeme(other.strLexeme),
+        ptrLexeme(other.ptrLexeme), subSexps(other.subSexps) //FIXME
+   {}
+
+   Sexps(Sexps* other)
+      : tokenClass(other->tokenClass), strLexeme(other->strLexeme),
+        ptrLexeme(other->ptrLexeme), subSexps(other->subSexps) //FIXME
+   {}
+
    ~Sexps() {
-      delete ptrLexeme;
-      delete[] subSexps;
+      // delete ptrLexeme; //crash!
+      // delete[] subSexps; //crash!
    }
 
    std::string getStrLexeme() const {
@@ -55,6 +65,10 @@ public:
    virtual Sexps eval();
 
    void parseExps();
+
+   bool isAtom() {
+      return contains({TokenClass::BOOL, TokenClass::INT, TokenClass::FLOAT, TokenClass::CHAR, TokenClass::STR, TokenClass::ATOM, TokenClass::EMPTY}, tokenClass);
+   }
 
 #ifdef DEBUG_SPP
    void printVal();

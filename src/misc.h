@@ -6,9 +6,9 @@
 
 #include <string>
 
-// Some C++ formatters (such as Code::Blocks's) cannoot handle :
-// in C++11 range-based for loops, so I use _in_, in place of :
-#define _in_ :
+// Some C++ formatters (such as Code::Blocks's) cannot handle :
+// in C++11 range-based for loops, so I use IN, in place of :
+#define IN :
 
 
 typedef char byte;
@@ -38,5 +38,14 @@ inline bool strToBool(const std::string& str) {
 #else
 #define BUG(x)
 #endif
+
+
+//I should get shot
+#define LET_(x, y) [&]() { auto x = y;
+#define _(x, y) auto x = y;
+#define _IN
+#define _END(x) ;return x; }()
+//cout << LET_(x, 5)_(y, 10)_IN int n = x+y _END(n+x); will print 20
+
 
 #endif // MISC_H_INCLUDED
