@@ -15,7 +15,7 @@ bool isFloat(std::string s) {
 
    bool haveDot = false;
 
-   for (char c IN s)
+   for (char c _in_ s)
       if (!isDigit(c))
          if (c != '.')
             return false;
@@ -31,7 +31,7 @@ bool isInt(std::string s) {
    if (s.length() < 1)
       return false;
 
-   for (char c IN s)
+   for (char c _in_ s)
       if (!isDigit(c))
          return false;
 
@@ -45,7 +45,7 @@ NumType getNumType(std::string s) { //ehh...ugly
 
    int numDot = 0;
 
-   for (char c IN s)
+   for (char c _in_ s)
       if (!isDigit(c))
          if (c != '.')
             return NumType::NONE;

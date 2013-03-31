@@ -27,13 +27,15 @@ std::string formatSexps(const std::string& sexpsWithSpaces);
 class Sexps {
    friend Sexps parseExpression(const std::string& expr);
 
-   enum class TokenClass : byte { BOOL, INT, FLOAT, CHAR, STR,
-                            ATOM, EMPTY, //NOT_ATOM
-                            QUOTE_SEXPS, BACK_QUOTE_SEXPS, EVAL_SEXPS, SEXPS }; //EVAL_SEXPS is ~(sexps)
+   enum class TokenClass : byte { BOOL, INT, FLOAT, CHAR, STR, //atoms
+                            EMPTY, //also atom
+                            QUOTE_SEXPS, BACK_QUOTE_SEXPS, EVAL_SEXPS, SEXPS }; //sexps. btw EVAL_SEXPS is ~(sexps)
    TokenClass tokenClass;
    std::string strLexeme;
    void* ptrLexeme; //cast this to needed type
    std::vector<Sexps>* subSexps;
+
+   bool atom;
 
 public:
 
@@ -45,7 +47,7 @@ public:
 
    Sexps(const Sexps& other)
       : tokenClass(other.tokenClass), strLexeme(other.strLexeme),
-        ptrLexeme(other.ptrLexeme), subSexps(other.subSexps) //FIXME
+        ptrLexeme(other.ptrLexeme), subSexps(other.subSexps) //FIXME. crash?
    {}
 
    Sexps(Sexps* other)
@@ -62,12 +64,16 @@ public:
       return strLexeme;
    }
 
-   virtual Sexps eval();
+   Sexps eval();
+   void parseExps(); //todo: move majority of stuff to new function getTypeToken()
 
-   void parseExps();
-
+   bool isEmpty() { return tokenClass == TokenClass::EMPTY; }
    bool isAtom() {
-      return contains({TokenClass::BOOL, TokenClass::INT, TokenClass::FLOAT, TokenClass::CHAR, TokenClass::STR, TokenClass::ATOM, TokenClass::EMPTY}, tokenClass);
+      return (
+              LET (is_atom = atom || elem(tokenClass, {TokenClass::BOOL, TokenClass::INT, TokenClass::FLOAT, TokenClass::CHAR, TokenClass::STR, TokenClass::EMPTY}))
+              IN if (is_atom) atom = true
+              END (is_atom)
+              );
    }
 
 #ifdef DEBUG_SPP

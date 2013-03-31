@@ -78,8 +78,9 @@ for (auto n : list)
    return filteredList;
 }
 
+
 template <class T>
-bool contains(std::vector<T> list, T element) {
+bool elem(T element, std::vector<T> list) {
 for (T i : list)
       if (i == element)
          return true;

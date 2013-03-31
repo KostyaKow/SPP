@@ -31,14 +31,15 @@ Sexps Sexps::eval() {
 
       } break;
 
-      case TokenClass::ATOM:
-         return new Sexps(*this);
+
       break;
 
-      default:
+      default: //if(atom) or fail
          return new Sexps(*this);
       break;
    }
+
+   return new Sexps(*this);
 }
 
 //side effect:   if first quote character is present, changes m_start, else m_start and m_end are -1
@@ -85,7 +86,7 @@ void Sexps::parseExps() {
             s.push_back(str[i]);
 
          //check if previous is one of the quotes or ~, and concat to this s
-         if (r_lexemes.size() && contains( {"~", "'", "`"}, r_lexemes[r_lexemes.size()-1]))
+         if (r_lexemes.size() && elem(r_lexemes[r_lexemes.size()-1], {"~", "'", "`"}))
          r_lexemes[r_lexemes.size()-1] += s;
          else
             r_lexemes.push_back(s);
@@ -98,7 +99,7 @@ void Sexps::parseExps() {
 
    BUG(grouped lexemes)
 
-   auto h_getTypeOfToken = [&h_groupLexemes](const string& str) -> TokenClass {
+   auto h_getTypeOfToken = [&](const string& str) -> TokenClass {
       vector<string> vecVal = h_groupLexemes(str); //FIXME: delete this. quick and dirty to not change everything
 
 #ifdef DEBUG_SPP
@@ -116,7 +117,7 @@ void Sexps::parseExps() {
          if (vecVal[0] != "'(")
             if (vecVal[0] != "`(")
                if (vecVal[0] != "~(")
-                  tokenClass = TokenClass::ATOM;
+                  atom = true;
                else tokenClass = TokenClass::EVAL_SEXPS;
             else tokenClass = TokenClass::BACK_QUOTE_SEXPS;
          else tokenClass = TokenClass::QUOTE_SEXPS;
@@ -125,7 +126,7 @@ void Sexps::parseExps() {
       BUG(matched stuff)
 
       //it would be faster to do type evals here, but it would also make it even uglier...
-      if (tokenClass == TokenClass::ATOM) { //if atom, figure out if BOOL, INT, FLOAT, CHAR or STR. change the type.
+      if (atom) { //figure out if BOOL, INT, FLOAT, CHAR or STR. change the type.
          std::cout << "atom!!!\n";
 
          if (vecVal.size() != 1)
@@ -146,7 +147,7 @@ void Sexps::parseExps() {
          }
 
          //NumTokenClass::NONE
-         else if (contains( {"true", "false"}, vecVal[0])) { //BOOL
+         else if (elem(vecVal[0], {"true", "false"})) { //BOOL
             tokenClass = TokenClass::BOOL;
             //pVal = (void*)new bool;
             ///*(bool*)pVal = strToBool(vecVal[0]);
@@ -172,18 +173,26 @@ void Sexps::parseExps() {
 
    tokenClass = h_getTypeOfToken(strLexeme);
 
+   //sets std::vector<Sexps>* subSexps;
+   auto h_parseSexps = [&]() {
+      if (isEmpty())
+         return;
+      if (isAtom())
+         subSexps = new vector<Sexps>({vecVal[0]});
+
+      for (auto word : vecVal) {
+         if (word == "")
+      }
+
+
+   }; h_parseSexps();
+
 
 #ifdef DEBUG_SPP
    printTokenClass(); std::cout << "\n";
 #endif
 
-   /*
-   else { //if not atom
-      for (auto str _in_ vecVal) {
-         if (str == "")
-      }
-   }
-   */
+
 
 }
 
@@ -242,7 +251,7 @@ std::string formatSexps(const std::string& sexpsWithSpaces) {
          while (str[i] == ' ' && str[i+1] == ' ') i++;
          r_str.push_back(str[i]);
 
-         if (contains(beforeParens, str[i]))
+         if (elem(str[i], beforeParens))
             if (str[i+1] == ' ') i++;
       }
       return r_str;
@@ -265,13 +274,13 @@ std::string formatSexps(const std::string& sexpsWithSpaces) {
          }
       }
 
-      if (sexps[i] == '(' && sexps[i+1] != ' ' && !contains(beforeParens, sexps[i-1])) //insert space for next char
+      if (sexps[i] == '(' && sexps[i+1] != ' ' && !elem(sexps[i-1], beforeParens)) //insert space for next char
          r_sexps.push_back(' ');
 
       if (sexps[i-1] == '(') //previous
          r_sexps.push_back(' ');//insert space for previous (
 
-      if (i && sexps[i] == ')' && sexps[i-1] != ' ' && !contains(beforeParens , sexps[i-1]))
+      if (i && sexps[i] == ')' && sexps[i-1] != ' ' && !elem(sexps[i-1], beforeParens))
          r_sexps.push_back(' ');
 
       if (i == m_quoteStart)
@@ -311,11 +320,7 @@ void Sexps::printTokenClass() {
    case TokenClass::STR:
       cout << "STR\n";
    break;
-   //
-   case TokenClass::ATOM:
-      cout << "ATOM\n";
-   break;
-   //
+
    case TokenClass::QUOTE_SEXPS:
       cout << "QUOTE_SEXPS\n";
    break;
@@ -333,7 +338,10 @@ void Sexps::printTokenClass() {
    break;
 
    default: //TODO: add other tokenClasss.
-      cout << "^^ could not find the tokenClass of sexps\n";
+      if (atom)
+         cout << "ATOM\n";
+      else
+         cout << "^^ could not find the tokenClass of sexps\n";
    break;
    }
 }
