@@ -1,21 +1,13 @@
 SPP
 ===
 
-Scheme interpreter written in C++.
-
-I am trying to write a Scheme interpreter in several different languages I am studying. This is mainly for practice and learning, and is not intended to be serious project.
+Lisp interpreter written in C++.
 
 Compilation instruction:
 
-Linux:
+GNU/Linux & other Unix systems using GCC:
 
 cd SPP; make
-
-or use the Code::Blocks project.
-
-OS X:
-
-I haven't tested this on Mac, but should be same as Linux.
 
 Windows:
 
