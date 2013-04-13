@@ -28,14 +28,14 @@ class Sexps {
    friend Sexps parseExpression(const std::string& expr);
 
    enum class TokenClass : byte { BOOL, INT, FLOAT, CHAR, STR, //atoms
-                            EMPTY, //also atom
-                            QUOTE_SEXPS, BACK_QUOTE_SEXPS, EVAL_SEXPS, SEXPS }; //sexps. btw EVAL_SEXPS is ~(sexps)
+                                  EMPTY, //also atom
+                                  QUOTE_SEXPS, BACK_QUOTE_SEXPS, EVAL_SEXPS, SEXPS }; //sexps. btw EVAL_SEXPS is ~(sexps)
    TokenClass tokenClass;
    std::string strLexeme;
    void* ptrLexeme; //cast this to needed type
    std::vector<Sexps>* subSexps;
 
-   bool atom;
+   bool atom; //do not use this. use isAtom instead!
 
 public:
 
@@ -60,17 +60,16 @@ public:
       // delete[] subSexps; //crash!
    }
 
-   std::string getStrLexeme() const {
-      return strLexeme;
-   }
+   std::string getStrLexeme() const { return strLexeme; }
 
    Sexps eval();
    void parseExps(); //todo: move majority of stuff to new function getTypeToken()
 
    bool isEmpty() { return tokenClass == TokenClass::EMPTY; }
+
    bool isAtom() {
       return (
-              LET (is_atom = atom || elem(tokenClass, {TokenClass::BOOL, TokenClass::INT, TokenClass::FLOAT, TokenClass::CHAR, TokenClass::STR, TokenClass::EMPTY}))
+              LET (is_atom = atom || (elem(tokenClass, {TokenClass::BOOL, TokenClass::INT, TokenClass::FLOAT, TokenClass::CHAR, TokenClass::STR, TokenClass::EMPTY})))
               IN if (is_atom) atom = true
               END (is_atom)
               );
@@ -85,7 +84,7 @@ public:
 
 int handleError(ParseError error);
 
-class Function {
+/*class Function {
 
    struct Function_struct {
       Function_struct() = default;
@@ -110,6 +109,6 @@ public:
 
    Sexps eval(Sexps args) {}
 
-};
+};*/
 
 #endif // SSEXPS_H_INCLUDED

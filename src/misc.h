@@ -40,13 +40,16 @@ inline bool strToBool(const std::string& str) {
 #endif
 
 
-//I should get shot
-//this will probably go away really soon, but for now I am having fun :p
+//this will probably get removed really soon, but for now I am having fun :p
 #define LET(x) [&]() { auto x;
 #define _(x) auto x;
 #define IN
+#define EMPTY __not_used__ = -1
 #define END(x) ;return x; }()
 //cout << LET(x = 5)_(y = 10) IN int n = x+y END(n+x); will print 20
 
+#define FOR_EACH_COUNT(count, elem, lst) \
+   static int count = 0; \
+   for (auto elem : (LET(EMPTY) IN count++ END(lst)))
 
 #endif // MISC_H_INCLUDED

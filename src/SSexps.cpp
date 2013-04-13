@@ -5,12 +5,14 @@ Sexps Sexps::eval() {
 
    std::string _new_;
 
+   if (isAtom())
+      goto returnSelf;
+
    switch(tokenClass) {
 
       case TokenClass::QUOTE_SEXPS: case TokenClass::EMPTY:
-         return new Sexps(*this);
+         goto returnSelf;
       break;
-
 
       case TokenClass::BACK_QUOTE_SEXPS: //check is sub sexps have ~ in front, and if they do, eval() them.
          for (Sexps s : *subSexps)
@@ -19,18 +21,14 @@ Sexps Sexps::eval() {
          return Sexps(_new_);
       break;
 
-
-      //~ and normal Sexps -- (). all the juicy stuff is here:
+      //~ and normal Sexps (). all the juicy stuff is here:
       case TokenClass::EVAL_SEXPS: case TokenClass::SEXPS: {
          int begin = 0;
          while (strLexeme[begin] != '(') begin++;
 
-         if (!isAtom()) {
-            for (Sexps s : *subSexps);
-         }
+         for (Sexps s : *subSexps);
 
       } break;
-
 
       break;
 
@@ -39,6 +37,7 @@ Sexps Sexps::eval() {
       break;
    }
 
+returnSelf:
    return new Sexps(*this);
 }
 
@@ -181,7 +180,7 @@ void Sexps::parseExps() {
          subSexps = new vector<Sexps>({vecVal[0]});
 
       for (auto word : vecVal) {
-         if (word == "")
+         if (word == "") ;
       }
 
 
@@ -191,8 +190,6 @@ void Sexps::parseExps() {
 #ifdef DEBUG_SPP
    printTokenClass(); std::cout << "\n";
 #endif
-
-
 
 }
 
