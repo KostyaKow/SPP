@@ -9,15 +9,20 @@
 
 int main(void) {
    while (_true) {
-      printf("\nenter stuff: ");
+      printf("\n\n\n\nenter stuff: ");
 
-      char* str = (char*)malloc(sizeof(char)*100);
+      char str[100]; 
       gets(str); //scanf("%s", str);
       
       BUG
       
       int* n = _get_next_quotes(str, 0); 
 
-      printf("\n\n******\nnumbers: %i  %i\n********\n\n\n", n[0], n[1]);
+      printf("\n********\nnumbers: %i  %i\n********\n", n[0], n[1]);
+
+      int i;
+      for (i = 0; i < strlen(str); i = increment_counter(str, i)) {
+         printf("%c", str[i]);
+      }
    }
 }
