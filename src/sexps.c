@@ -1,9 +1,9 @@
 #include "sexps.h"
 #include "misc/types.h"
 
-#include <string.h>
+#include <stdio.h>
 #include <stdlib.h>
-
+#include <string.h>
 
 
 uint* _get_next_quotes(const char* str, int i) {
@@ -50,16 +50,10 @@ int increment_counter(const char* str, int i) {
    if (quotes[0] == quotes[1]) //no quotes found. both of them should be 0. (assert?)
       return i + 1;
  
-   //If quote is first character, this is needed (because unsigned). Look at next comparison
-   //if (quotes[0] == 0) 
-   //   quotes[0] = 1;
- 
-   if (quotes[0] == 0) {
-      printf("\nreturning first\n"); 
+   if (quotes[0] == 0)
       return quotes[1] + 1;
-   }
     
-   if (i >= (quotes[0]) && i <= quotes[1])
+   if (i >= (quotes[0] - 1) && i <= quotes[1])
       return quotes[1] + 1;
    else
       return i + 1;
