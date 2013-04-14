@@ -36,9 +36,13 @@ uint* _get_next_quotes(const char* str, int i) {
 
 int increment_counter(const char* str, int i) {
    static _bool first_run = _true;
-   static uint* quotes; 
+   static uint* quotes; //TODO: delete this...
+   static const char* _str = NULL;
+   
+   if (_str != str) //we are doing a new string...
+       first_run = _true; 
 
-   if (first_run) {
+   if (first_run || !(i <= quotes[1])) { //I think this shaves off a few cycles :p 
       quotes = _get_next_quotes(str, i);
       first_run = _false;
    }
@@ -46,14 +50,16 @@ int increment_counter(const char* str, int i) {
    if (quotes[0] == quotes[1]) //no quotes found. both of them should be 0. (assert?)
       return i + 1;
  
-   if (!(i <= quotes[1])) //I think this shaves off a few cycles :p
-      quotes = _get_next_quotes(str, i);
- 
    //If quote is first character, this is needed (because unsigned). Look at next comparison
    //if (quotes[0] == 0) 
    //   quotes[0] = 1;
-  
-   if (i >= quotes[0] && i <= quotes[1])
+ 
+   if (quotes[0] == 0) {
+      printf("\nreturning first\n"); 
+      return quotes[1] + 1;
+   }
+    
+   if (i >= (quotes[0]) && i <= quotes[1])
       return quotes[1] + 1;
    else
       return i + 1;
