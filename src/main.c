@@ -23,8 +23,8 @@ int main(void) {
       printf("\n********\nnumbers: %i  %i\n********\n", n[0], n[1]);
 
       int i;
-      for (i = _increment_counter(str, 0); i < strlen(str); i = _increment_counter(str, i))
+      for (i = _increment_counter(str, 0, _true); i < strlen(str); i = _increment_counter(str, i, _false))
          printf("%i: %c\n", i, str[i]); 
-      for (i = _increment_counter(str, 0); i < strlen(str); i = _increment_counter(str, i)) printf("%c", str[i]);    
+      for (i = _init_counter(str, 0); i < strlen(str); i = _increment_counter(str, i)) printf("%c", str[i]);    
    }
 }
