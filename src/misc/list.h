@@ -3,10 +3,40 @@
 
 //Taken from Linux kernel
 
+/*
 #include <linux/types.h>
 #include <linux/stddef.h>
 #include <linux/poison.h>
 #include <linux/const.h>
+*/
+
+#undef offsetof
+#define offsetof(TYPE, MEMBER) ((size_t) &((TYPE *)0)->MEMBER)
+
+/**
+ * container_of - cast a member of a structure out to the containing structure
+ * @ptr:        the pointer to the member.
+ * @type:       the type of the container struct this is embedded in.
+ * @member:     the name of the member within the struct.
+ *
+ */
+#define container_of(ptr, type, member) ({                      \
+	const typeof( ((type *)0)->member ) *__mptr = (ptr);    \
+	(type *)( (char *)__mptr - offsetof(type,member) );})
+
+
+struct list_head {
+	struct list_head *next;
+	struct list_head *prev;
+};
+
+struct hlist_head {
+   struct hlist_node *first;
+};
+
+struct hlist_node {
+   struct hlist_node *next, **pprev;
+};
 
 /*
  * Simple doubly linked list implementation.
@@ -106,8 +136,8 @@ static inline void __list_del_entry(struct list_head *entry)
 static inline void list_del(struct list_head *entry)
 {
 	__list_del(entry->prev, entry->next);
-	entry->next = LIST_POISON1;
-	entry->prev = LIST_POISON2;
+	//entry->next = LIST_POISON1;
+	//entry->prev = LIST_POISON2;
 }
 #else
 extern void __list_del_entry(struct list_head *entry);
@@ -597,8 +627,8 @@ static inline void __hlist_del(struct hlist_node *n)
 static inline void hlist_del(struct hlist_node *n)
 {
 	__hlist_del(n);
-	n->next = LIST_POISON1;
-	n->pprev = LIST_POISON2;
+	//n->next = LIST_POISON1;
+	//n->pprev = LIST_POISON2;
 }
 
 static inline void hlist_del_init(struct hlist_node *n)

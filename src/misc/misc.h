@@ -8,4 +8,10 @@
 #define BUG
 #endif
 
+
+
+
+char getch(void);
+
+
 #endif //MISC_H_INCLUDE

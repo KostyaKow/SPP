@@ -8,3 +8,4 @@ obj/
 bin/Debug/LispInterpreter
 .gitignore
 spp
+a.out

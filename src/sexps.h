@@ -1,14 +1,29 @@
 #ifndef SEXPS_H_INCLUDE
 #define SEXPS_H_INCLUDE
 
+#include "misc/types.h"
+#include "string.h"
+
+enum error_type { BAD_INPUT };
+enum sexps_type { SEXPS_INT, SEXPS_FLOAT, SEXPS_CHAR }; 
+
+
 struct Sexps {
-   char* str_val;
+   const char* str_val; int str_val_len;
+
    void* val;
+   
+   byte_t type;
+   bool_t atom;
 
-   struct Sexps *sub_sexps;
+   struct Sexps** sub_sexps;
 
+   uint_t size_sub_sexps, sub_sexps_len;
 };
 
-struct Sexps* parse_sexps(const char* sexps);
+
+struct Sexps* parse_sexps(const char* sexps, size_t len);
+
+int* _get_next_quotes(const char* str, size_t len, int i);
 
 #endif //SEXPS_H_INCLUDE

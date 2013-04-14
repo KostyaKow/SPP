@@ -1,4 +1,4 @@
-#include "config.h"
+#include "misc/config.h"
 
 #include "sexps.h"
 #include "misc/types.h"
@@ -8,8 +8,14 @@
 #include <stdlib.h>
 #include <string.h> 
 
+void get_some() {
+   char* n = (char*)malloc(100*sizeof(char));
+   gets(n);
+   n = realloc(n, 0);
+}
 
 int main(void) {
+ 
    while (_true) {
       printf("\n\n\n\nenter stuff: ");
 
@@ -18,13 +24,32 @@ int main(void) {
       
       BUG
       
-      int* n = _get_next_quotes(str, 0); 
+      int* n = _get_next_quotes(str, 0, 0); 
 
       printf("\n********\nnumbers: %i  %i\n********\n", n[0], n[1]);
 
       int i;
-      for (i = _increment_counter(str, 0, _true); i < strlen(str); i = _increment_counter(str, i, _false))
-         printf("%i: %c\n", i, str[i]); 
-      for (i = _init_counter(str, 0); i < strlen(str); i = _increment_counter(str, i)) printf("%c", str[i]);    
+      for (i = _increment_counter(str, 0, 0, _true);
+           i < strlen(str);
+           i = _increment_counter(str, 0, i, _false))
+      {
+         printf("%i: %c\n", i, str[i]);
+         getch();
+      }
+      
+
+      for (i = _increment_counter(str, 0, 0, _true);
+           i < strlen(str);
+           i = _increment_counter(str, 0, i, _false))
+      {
+         printf("%c", str[i]);
+         getch();
+      }
+
    }
+
+   return 0;
 }
+
+
+
