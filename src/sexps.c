@@ -62,8 +62,9 @@ int _increment_counter(const char* str, size_t len, int i, bool_t init) {
    }
     
    if (i >= (quotes[0] - to_add) && i <= quotes[1]) {
-      free(quotes);
-      return quotes[1] + 1;
+      i = quotes[1] + 1;
+      free(quotes); //f*** $#!@$!@#
+      return i;
    }
    free(quotes);
    return i + to_add; 

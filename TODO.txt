@@ -1,0 +1,4 @@
+* Write a web interface.
+* Test on different Arches, OSes and Compilers (make a Pi version?)
+* Test with Clang (and possible compile with Emscripten to Javascript!)
+* Switch to GNU Readline for input.
