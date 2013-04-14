@@ -11,7 +11,4 @@ struct Sexps {
 
 struct Sexps* parse_sexps(const char* sexps);
 
-unsigned int* _get_next_quotes(const char* str, int i);
-
-
 #endif //SEXPS_H_INCLUDE

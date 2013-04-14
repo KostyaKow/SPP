@@ -34,21 +34,31 @@ uint* _get_next_quotes(const char* str, int i) {
    return to_return;
 }
 
-int increment_counter(const char* str, int i) {
+
+//this code looks a bit weird, because it is optimized to not call _get_next_quotes, until it is needed.
+//this will probably not work in parallel
+int _increment_counter(const char* str, int i) {
    static _bool first_run = _true;
-   static uint* quotes; //TODO: delete this...
+   static uint* quotes; //TODO: free this...
    static const char* _str = NULL;
+  
    
-   if (_str != str) //we are doing a new string...
+   if (_str != str) { //we are doing a new string...
        first_run = _true; 
+       _str = str;
+   } 
+
+   int num_to_add = 1; //if called during initialization (as opposed to updating)
+   if (i == 0 && first_run)
+      num_to_add = 0;
 
    if (first_run || !(i <= quotes[1])) { //I think this shaves off a few cycles :p 
       quotes = _get_next_quotes(str, i);
       first_run = _false;
    }
-
+   
    if (quotes[0] == quotes[1]) //no quotes found. both of them should be 0. (assert?)
-      return i + 1;
+      return i + num_to_add; 
  
    if (quotes[0] == 0)
       return quotes[1] + 1;
@@ -56,7 +66,7 @@ int increment_counter(const char* str, int i) {
    if (i >= (quotes[0] - 1) && i <= quotes[1])
       return quotes[1] + 1;
    else
-      return i + 1;
+      return i + num_to_add; 
 
 }
 
@@ -64,19 +74,10 @@ struct Sexps* parse_sexps(const char* sexps) {
    int len = strlen(sexps);
  
    int i = 0; 
-   while (i < len || sexps[i] != ')') {
+   for (i = 0; i < len || sexps[i] != ')'; _increment_counter(sexps, i)) {
    
    }
 
 }
-
-
-
-
-
-
-
-
-
 
 
