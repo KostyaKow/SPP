@@ -34,7 +34,6 @@ int main(void) {
            i = _increment_counter(str, 0, i, _false))
       {
          printf("%i: %c\n", i, str[i]);
-         getch();
       }
       
 
@@ -43,7 +42,6 @@ int main(void) {
            i = _increment_counter(str, 0, i, _false))
       {
          printf("%c", str[i]);
-         getch();
       }
 
    }
