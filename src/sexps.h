@@ -26,4 +26,6 @@ struct Sexps* parse_sexps(const char* sexps, size_t len);
 
 int* _get_next_quotes(const char* str, size_t len, int i);
 
+int _increment_counter(const char* str, size_t len, int i, bool_t init);
+
 #endif //SEXPS_H_INCLUDE

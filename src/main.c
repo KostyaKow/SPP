@@ -11,7 +11,7 @@
 void get_some() {
    char* n = (char*)malloc(100*sizeof(char));
    gets(n);
-   n = realloc(n, 0);
+   n = (char*)realloc(n, 0);
 }
 
 int main(void) {

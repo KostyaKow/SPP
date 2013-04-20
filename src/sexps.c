@@ -131,7 +131,7 @@ struct Sexps* parse_sexps(const char* sexps, size_t len) {
    
       //TODO: change to container type
       if (to_ret->sub_sexps_len + 1 == to_ret->size_sub_sexps)
-         to_ret = realloc(to_ret, to_ret->size_sub_sexps * 2); 
+         to_ret = (Sexps*)realloc(to_ret, to_ret->size_sub_sexps * 2); 
 
       to_ret->sub_sexps[to_ret->sub_sexps_len++] = (struct Sexps*)malloc(sizeof(struct Sexps));
     
