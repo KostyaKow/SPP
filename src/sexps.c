@@ -1,3 +1,4 @@
+#include "misc/config.h"
 #include "sexps.h"
 #include "misc/types.h"
 #include "misc/misc.h"
@@ -17,6 +18,7 @@ void error(const char* str, enum error_type how_bad) {
 
 
 int* _get_next_quotes(const char* str, size_t len, int i) {
+   BUG(".") 
    len = (len == 0) ? strlen(str) : len;
    
    int* to_return = (int*)malloc(sizeof(int) * 2);
@@ -95,7 +97,7 @@ struct Sexps* parse_sexps(const char* sexps, size_t len) {
       return to_ret;
     
    int counter = 0; 
-   while (counter < len) { 
+   for (; counter < len; counter++) { 
       int i; 
       for (i = _increment_counter(sexps, len, counter, _true);
            i < len;
@@ -123,7 +125,8 @@ struct Sexps* parse_sexps(const char* sexps, size_t len) {
 
       if (begin_paren == -1 || end_paren == -1)
         continue;
-
+   
+      
       if (to_ret->sub_sexps == NULL) {
          to_ret->sub_sexps = (struct Sexps**)malloc(sizeof(struct Sexps*));
          to_ret->sub_sexps_len = to_ret->size_sub_sexps = 1;
@@ -131,12 +134,11 @@ struct Sexps* parse_sexps(const char* sexps, size_t len) {
       
       //TODO: change to a nice container implementation (tree). 
       if (to_ret->sub_sexps_len + 1 == to_ret->size_sub_sexps)
-         to_ret->sub_sexps = (struct Sexps**)realloc(to_ret, sizeof(struct Sexps*) * (to_ret->size_sub_sexps *= 2)); 
-
-      to_ret->sub_sexps[to_ret->sub_sexps_len++] = (struct Sexps*)malloc(sizeof(struct Sexps));
-    
-      //char *str_sub_sexps;
+         to_ret->sub_sexps =
+            (struct Sexps**)realloc(to_ret, sizeof(struct Sexps**) * (to_ret->size_sub_sexps *= 2)); 
       
+      to_ret->sub_sexps[to_ret->sub_sexps_len++] = parse_sexps(sexps + begin_paren, begin_paren - end_paren);
+
    }
    return to_ret;
 }

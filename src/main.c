@@ -22,26 +22,23 @@ int main(void) {
       char str[100]; 
       gets(str); //scanf("%s", str);
       
-      BUG
+      struct Sexps* exps = parse_sexps(str, 0);
+      printf("%i", exps->str_val_len);
+             
+      //BUG
       
       int* n = _get_next_quotes(str, 0, 0); 
 
       printf("\n********\nnumbers: %i  %i\n********\n", n[0], n[1]);
+
 
       int i;
       for (i = _increment_counter(str, 0, 0, _true);
            i < strlen(str);
            i = _increment_counter(str, 0, i, _false))
       {
-         printf("%i: %c\n", i, str[i]);
-      }
-      
-
-      for (i = _increment_counter(str, 0, 0, _true);
-           i < strlen(str);
-           i = _increment_counter(str, 0, i, _false))
-      {
          printf("%c", str[i]);
+         BUG("Hey there!");
       }
 
    }
