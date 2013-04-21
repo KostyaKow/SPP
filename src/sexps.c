@@ -18,7 +18,6 @@ void error(const char* str, enum error_type how_bad) {
 
 
 int* _get_next_quotes(const char* str, size_t len, int i) {
-   BUG(".") 
    len = (len == 0) ? strlen(str) : len;
    
    int* to_return = (int*)malloc(sizeof(int) * 2);
@@ -65,7 +64,7 @@ int _increment_counter(const char* str, size_t len, int i, bool_t init) {
     
    if (i >= (quotes[0] - to_add) && i <= quotes[1]) {
       i = quotes[1] + 1;
-      free(quotes); //f*** $#!@$!@#
+      free(quotes);
       return i;
    }
    free(quotes);
@@ -77,6 +76,8 @@ bool_t parse_type(struct Sexps* s) { return _true; }
 
 struct Sexps* parse_sexps(const char* sexps, size_t len) {
    len = (len == 0) ? strlen(sexps) : len; 
+
+   //BUG("don't call me too many times, ok!") //infinite loop is inside the loop...
 
    int begin_paren, end_paren, num_open_paren, num_closed_paren;
    begin_paren = end_paren = -1;
@@ -97,12 +98,14 @@ struct Sexps* parse_sexps(const char* sexps, size_t len) {
       return to_ret;
     
    int counter = 0; 
-   for (; counter < len; counter++) { 
+   while (counter < len) {
+      //BUG("HAHA, GOT YOU!"); // NOPE. not here either. gotta nest deeper!
       int i; 
       for (i = _increment_counter(sexps, len, counter, _true);
            i < len;
            _increment_counter(sexps, len, i, _false))
       {
+         BUG("If this is not the place of the infinite loop, I will re-write this in Java, or shoot myself in the head!")
          if (sexps[i] == '(') {
             if (num_open_paren == 0)
                begin_paren = i;
@@ -122,6 +125,7 @@ struct Sexps* parse_sexps(const char* sexps, size_t len) {
             }
          }
       }
+      
 
       if (begin_paren == -1 || end_paren == -1)
         continue;
@@ -139,6 +143,7 @@ struct Sexps* parse_sexps(const char* sexps, size_t len) {
       
       to_ret->sub_sexps[to_ret->sub_sexps_len++] = parse_sexps(sexps + begin_paren, begin_paren - end_paren);
 
+      counter = i;
    }
    return to_ret;
 }
