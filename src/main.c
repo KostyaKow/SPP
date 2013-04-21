@@ -24,9 +24,12 @@ void printcnf(char c, int n, const char* str) { //print character c n times, bef
 
 void _print_sexps(struct Sexps* sexps, int nesting_level) {
    if (sexps == NULL)
-      error("Null pointer passed to _print_sexps");
+      error("Null pointer passed to _print_sexps", NULL_PTR );
    
-   printcnf('\t', nesting_level, "\n");
+   char str[100]; //for output
+   
+   sprintf(str, "\nnumber of sexps: %i; size for array: %i", sexps->sub_sexps_len, sexps->size_sub_sexps); 
+   printcnf('\t', nesting_level, str);
    
    if (sexps->atom) {
       printcnf('\t', nesting_level, "atom of type ");
@@ -59,10 +62,7 @@ void print_sexps(struct Sexps* sexps) {
 }
 
 int main(void) {
-   BUG_("main");
-   
    while (true) {
-      BUG_("main loop");
       printf("\n\n\n\nenter stuff: ");
 
       char str[100]; 
@@ -82,7 +82,6 @@ int main(void) {
            i = _increment_counter(str, 0, i, false))
       {
          //printf("%c", str[i]);
-         BUG("hopefully we can get here");
       }
 
    }

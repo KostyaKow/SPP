@@ -97,19 +97,13 @@ struct Sexps* parse_sexps(const char* sexps, size_t len) {
    if (to_ret->atom)
       return to_ret;
   
-   BUG_("entered parse_sexps");
-   
    int counter = 0; 
    while (counter < len) {
-      
-      BUG_("inside while loop");
-
       int i; 
       for (i = _increment_counter(sexps, len, i, true);
            i < len;
            _increment_counter(sexps, len, i, false))
       {
-         BUG("inside for loop");
          char str[5]; sprintf(str, "%i", i);
 
          if (sexps[i] == '(') {
@@ -136,9 +130,10 @@ struct Sexps* parse_sexps(const char* sexps, size_t len) {
       if (begin_paren == -1 || end_paren == -1)
         continue;
    
+      BUG_("Got here (only for sexps with sub_sexps)");
       
       if (to_ret->sub_sexps == NULL) {
-         to_ret->sub_sexps = (struct Sexps**)malloc(sizeof(struct Sexps*));
+         to_ret->sub_sexps = (struct Sexps**)malloc(sizeof(struct Sexps**));
          to_ret->sub_sexps_len = to_ret->size_sub_sexps = 1;
       }
       
