@@ -4,7 +4,7 @@
 #include "misc/types.h"
 #include "string.h"
 
-enum error_type { BAD_INPUT };
+enum error_type { BAD_INPUT, BAD_PAREN };
 enum sexps_type { SEXPS_INT, SEXPS_FLOAT, SEXPS_CHAR }; 
 
 

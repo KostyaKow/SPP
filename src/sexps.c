@@ -70,7 +70,7 @@ int _increment_counter(const char* str, size_t len, int i, bool_t init) {
    return i + to_add; 
 }
 
-bool_t parse_type(struct Sexps* s) {}
+bool_t parse_type(struct Sexps* s) { return _true; }
 
 
 struct Sexps* parse_sexps(const char* sexps, size_t len) {
@@ -109,7 +109,7 @@ struct Sexps* parse_sexps(const char* sexps, size_t len) {
 
          if (sexps[i] == ')') {
             if (num_open_paren == 0) {
-               error("found close parenthesis without matching parenthesis", BAD_INPUT);
+               error("found close parenthesis without matching open parenthesis", BAD_PAREN);
                return NULL;
             }
             num_closed_paren++;
@@ -128,16 +128,17 @@ struct Sexps* parse_sexps(const char* sexps, size_t len) {
          to_ret->sub_sexps = (struct Sexps**)malloc(sizeof(struct Sexps*));
          to_ret->sub_sexps_len = to_ret->size_sub_sexps = 1;
       }
-   
-      //TODO: change to container type
+      
+      //TODO: change to a nice container implementation (tree). 
       if (to_ret->sub_sexps_len + 1 == to_ret->size_sub_sexps)
-         to_ret = (Sexps*)realloc(to_ret, to_ret->size_sub_sexps * 2); 
+         to_ret->sub_sexps = (struct Sexps**)realloc(to_ret, sizeof(struct Sexps*) * (to_ret->size_sub_sexps *= 2)); 
 
       to_ret->sub_sexps[to_ret->sub_sexps_len++] = (struct Sexps*)malloc(sizeof(struct Sexps));
     
-      char *str_sub_sexps;
+      //char *str_sub_sexps;
       
    }
+   return to_ret;
 }
 
 

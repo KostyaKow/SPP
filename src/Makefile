@@ -1,14 +1,17 @@
+CC=gcc
+CFLAGS=-Wall
+
 default: main.o sexps.o misc.o
-	g++ main.o sexps.o misc.o -o SPP
+	$(CC) $(CFLAGS) main.o sexps.o misc.o -o SPP
 
 main.o: main.c
-	g++ -c main.c
+	$(CC) $(CFLAGS) -c main.c
 
 sexps.o: sexps.c
-	g++ -c sexps.c
+	$(CC) $(CFLAGS) -c sexps.c
 
 misc.o: misc/misc.c
-	g++ -c misc/misc.c
+	$(CC) $(CFLAGS) -c misc/misc.c
 
 clean:
-	rm -f main.o; rm -f sexps.o; rm -f misc/misc.o	
+	rm -rf *.o SPP
