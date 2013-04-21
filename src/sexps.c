@@ -1,4 +1,4 @@
-#include "misc/config.h"
+#include "config.h"
 #include "sexps.h"
 #include "misc/types.h"
 #include "misc/misc.h"
@@ -26,12 +26,12 @@ int* _get_next_quotes(const char* str, size_t len, int i) {
    if (len <= i)
       return to_return;
    
-   bool_t have_1st_quote = _false;
+   bool_t have_1st_quote = false;
    while (i < len) {
       if (str[i] == '"') {
          if (!have_1st_quote) {
             to_return[0] = i;
-            have_1st_quote = _true;
+            have_1st_quote = true;
          }
 
          else {
@@ -71,13 +71,11 @@ int _increment_counter(const char* str, size_t len, int i, bool_t init) {
    return i + to_add; 
 }
 
-bool_t parse_type(struct Sexps* s) { return _true; }
+bool_t parse_type(struct Sexps* s) { return true; }
 
 
 struct Sexps* parse_sexps(const char* sexps, size_t len) {
    len = (len == 0) ? strlen(sexps) : len; 
-
-   //BUG("don't call me too many times, ok!") //infinite loop is inside the loop...
 
    int begin_paren, end_paren, num_open_paren, num_closed_paren;
    begin_paren = end_paren = -1;
@@ -99,13 +97,15 @@ struct Sexps* parse_sexps(const char* sexps, size_t len) {
     
    int counter = 0; 
    while (counter < len) {
-      //BUG("HAHA, GOT YOU!"); // NOPE. not here either. gotta nest deeper!
       int i; 
-      for (i = _increment_counter(sexps, len, counter, _true);
+      for (i = _increment_counter(sexps, len, counter, true);
            i < len;
-           _increment_counter(sexps, len, i, _false))
+           _increment_counter(sexps, len, i, false))
       {
-         BUG("If this is not the place of the infinite loop, I will re-write this in Java, or shoot myself in the head!")
+         SCONVERT(str, 5, "%i", i)
+         char str[5] = sprintf("%i", i);
+         BUG_(str);
+
          if (sexps[i] == '(') {
             if (num_open_paren == 0)
                begin_paren = i;
@@ -126,7 +126,6 @@ struct Sexps* parse_sexps(const char* sexps, size_t len) {
          }
       }
       
-
       if (begin_paren == -1 || end_paren == -1)
         continue;
    

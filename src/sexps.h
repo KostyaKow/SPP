@@ -1,6 +1,8 @@
 #ifndef SEXPS_H_INCLUDE
 #define SEXPS_H_INCLUDE
 
+#include "config.h"
+
 #include "misc/types.h"
 #include "string.h"
 

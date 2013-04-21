@@ -14,4 +14,4 @@ misc.o: misc/misc.c
 	$(CC) $(CFLAGS) -c misc/misc.c
 
 clean:
-	rm -rf *.o SPP
+	rm -rf *.o SPP *.swp

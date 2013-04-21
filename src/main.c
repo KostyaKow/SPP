@@ -1,4 +1,4 @@
-#include "misc/config.h"
+#include "config.h"
 
 #include "sexps.h"
 #include "misc/types.h"
@@ -16,7 +16,7 @@ void get_some() {
 
 int main(void) {
  
-   while (_true) {
+   while (true) {
       printf("\n\n\n\nenter stuff: ");
 
       char str[100]; 
@@ -33,9 +33,9 @@ int main(void) {
 
 
       int i;
-      for (i = _increment_counter(str, 0, 0, _true);
+      for (i = _increment_counter(str, 0, 0, true);
            i < strlen(str);
-           i = _increment_counter(str, 0, i, _false))
+           i = _increment_counter(str, 0, i, false))
       {
          printf("%c", str[i]);
          BUG("Hey there!");
