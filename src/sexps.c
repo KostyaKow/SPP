@@ -71,7 +71,9 @@ int _increment_counter(const char* str, size_t len, int i, bool_t init) {
    return i + to_add; 
 }
 
-bool_t parse_type(struct Sexps* s) { return true; }
+bool_t parse_type(struct Sexps* s) {
+   return true;
+}
 
 
 struct Sexps* parse_sexps(const char* sexps, size_t len) {
@@ -82,7 +84,7 @@ struct Sexps* parse_sexps(const char* sexps, size_t len) {
    num_open_paren = num_closed_paren = 0;
   
    struct Sexps* to_ret = (struct Sexps*)malloc(sizeof(struct Sexps)); 
-   to_ret->str_val = sexps;
+   to_ret->str_val = sexps; to_ret->str_val_len = len;
    to_ret->atom = 0;
    if (!parse_type(to_ret)) {
       free(to_ret);
