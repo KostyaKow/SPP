@@ -6,5 +6,5 @@
 bin/
 obj/
 .gitignore
-src/SPP
+src/spp
 a.out

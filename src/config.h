@@ -1,9 +1,6 @@
 #ifndef CONFIG_H_INCLUDE
 #define CONFIG_H_INCLUDE
 
-#define DEBUG 1
-
-//#pragma GCC diagnostic push
-//#pragma GCC diagnostic ignored "-Wcast-equal"
+//#define DEBUG 1
 
 #endif //CONFIG_H_INCLUDE

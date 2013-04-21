@@ -76,7 +76,7 @@ bool_t parse_type(struct Sexps* s) { return true; }
 
 struct Sexps* parse_sexps(const char* sexps, size_t len) {
    len = (len == 0) ? strlen(sexps) : len; 
-
+   
    int begin_paren, end_paren, num_open_paren, num_closed_paren;
    begin_paren = end_paren = -1;
    num_open_paren = num_closed_paren = 0;
@@ -94,17 +94,21 @@ struct Sexps* parse_sexps(const char* sexps, size_t len) {
    
    if (to_ret->atom)
       return to_ret;
-    
+  
+   BUG_("entered parse_sexps");
+   
    int counter = 0; 
    while (counter < len) {
+      
+      BUG_("inside while loop");
+
       int i; 
-      for (i = _increment_counter(sexps, len, counter, true);
+      for (i = _increment_counter(sexps, len, i, true);
            i < len;
            _increment_counter(sexps, len, i, false))
       {
-         SCONVERT(str, 5, "%i", i)
-         char str[5] = sprintf("%i", i);
-         BUG_(str);
+         BUG("inside for loop");
+         char str[5]; sprintf(str, "%i", i);
 
          if (sexps[i] == '(') {
             if (num_open_paren == 0)
@@ -125,6 +129,7 @@ struct Sexps* parse_sexps(const char* sexps, size_t len) {
             }
          }
       }
+      counter = i;
       
       if (begin_paren == -1 || end_paren == -1)
         continue;
@@ -142,7 +147,6 @@ struct Sexps* parse_sexps(const char* sexps, size_t len) {
       
       to_ret->sub_sexps[to_ret->sub_sexps_len++] = parse_sexps(sexps + begin_paren, begin_paren - end_paren);
 
-      counter = i;
    }
    return to_ret;
 }

@@ -15,8 +15,10 @@ void get_some() {
 }
 
 int main(void) {
- 
+   BUG_("main");
+   
    while (true) {
+      BUG_("main loop");
       printf("\n\n\n\nenter stuff: ");
 
       char str[100]; 
@@ -38,7 +40,7 @@ int main(void) {
            i = _increment_counter(str, 0, i, false))
       {
          printf("%c", str[i]);
-         BUG("Hey there!");
+         BUG("hopefully we can get here");
       }
 
    }
