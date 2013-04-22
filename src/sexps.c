@@ -18,8 +18,9 @@ void error(const char* str, enum error_type how_bad) {
 
 
 int* _get_next_quotes(const char* str, size_t len, int i) {
+   BUG_("_get_next_quotes called");
    len = (len == 0) ? strlen(str) : len;
-   
+    
    int* to_return = (int*)malloc(sizeof(int) * 2);
    to_return[0] = to_return[1] = -1;
 
@@ -47,6 +48,7 @@ int* _get_next_quotes(const char* str, size_t len, int i) {
 
 //TODO: optimize
 int _increment_counter(const char* str, size_t len, int i, bool_t init) {
+   BUG_("_increment counter called"); 
    len = (len == 0) ? strlen(str) : len;
 
    int* quotes;
@@ -78,6 +80,7 @@ bool_t parse_type(struct Sexps* s) {
 
 struct Sexps* parse_sexps(const char* sexps, size_t len) {
    len = (len == 0) ? strlen(sexps) : len; 
+   BUG_("parse_sexps called");
    
    int begin_paren, end_paren, num_open_paren, num_closed_paren;
    begin_paren = end_paren = -1;
@@ -99,13 +102,12 @@ struct Sexps* parse_sexps(const char* sexps, size_t len) {
   
    int counter = 0; 
    while (counter < len) {
+      BUG("beginning of while loop");
       int i; 
       for (i = _increment_counter(sexps, len, i, true);
            i < len;
            _increment_counter(sexps, len, i, false))
       {
-         char str[5]; sprintf(str, "%i", i);
-
          if (sexps[i] == '(') {
             if (num_open_paren == 0)
                begin_paren = i;
@@ -130,7 +132,7 @@ struct Sexps* parse_sexps(const char* sexps, size_t len) {
       if (begin_paren == -1 || end_paren == -1)
         continue;
    
-      BUG_("Got here (only for sexps with sub_sexps)");
+      BUG("Got here (only for sexps with sub_sexps)");
       
       if (to_ret->sub_sexps == NULL) {
          to_ret->sub_sexps = (struct Sexps**)malloc(sizeof(struct Sexps**));
