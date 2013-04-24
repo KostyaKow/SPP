@@ -6,7 +6,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h> 
+#include <string.h>
 
 void get_some() {
    char* n = (char*)malloc(100*sizeof(char));
@@ -25,18 +25,18 @@ void printcnf(char c, int n, const char* str) { //print character c n times, bef
 void _print_sexps(struct Sexps* sexps, int nesting_level) {
    BUG_("printing sexps!!!!!!!!!!!!!");
    if (sexps == NULL)
-      error("Null pointer passed to _print_sexps", NULL_PTR );
-   
+      error("Null pointer passed to _print_sexps", NULL_PTR);
+
    char str[100]; //for output
-   
-   sprintf(str, "\nnumber of sexps: %i; size for array: %i", sexps->sub_sexps_len, sexps->size_sub_sexps); 
+
+   sprintf(str, "\nnumber of sexps: %i; size for array: %i", sexps->sub_sexps_len, sexps->size_sub_sexps);
    printcnf('\t', nesting_level, str);
-   
+
    if (sexps->atom) {
       printcnf('\t', nesting_level, "atom of type ");
       switch (sexps->type) {
          case SEXPS_INT:
-           printf("int with value: %i", *(int*)sexps->val); 
+           printf("int with value: %i", *(int*)sexps->val);
          break;
          case SEXPS_FLOAT:
             printf("float with value: %F", *(float*)sexps->val);
@@ -52,7 +52,7 @@ void _print_sexps(struct Sexps* sexps, int nesting_level) {
       int i;
       for (i = 0; i < sexps->sub_sexps_len; i++)
          _print_sexps(sexps->sub_sexps[i], nesting_level + 1);
-     
+
       printcnf('\t', nesting_level, "\nsexps: ");
       printf("%s", sexps->str_val);
    }
@@ -66,13 +66,13 @@ int main(void) {
    while (true) {
       printf("\n\n************************\nenter stuff: ");
 
-      char str[100]; 
+      char str[100];
       gets(str); //scanf("%s", str);
-      
-      print_sexps(parse_sexps(str, 0)); 
+
+      print_sexps(parse_sexps(str, 0));
    }
-      /* 
-      int* n = _get_next_quotes(str, 0, 0); 
+      /*
+      int* n = _get_next_quotes(str, 0, 0);
 
       //printf("\n********\nnumbers: %i  %i\n********\n", n[0], n[1]);
 
