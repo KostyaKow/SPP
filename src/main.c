@@ -23,7 +23,7 @@ void printcnf(char c, int n, const char* str) { //print character c n times, bef
 }
 
 void _print_sexps(struct Sexps* sexps, int nesting_level) {
-   BUG_("calling _print_sexps");
+   BUG_("printing sexps!!!!!!!!!!!!!");
    if (sexps == NULL)
       error("Null pointer passed to _print_sexps", NULL_PTR );
    
@@ -64,7 +64,7 @@ void print_sexps(struct Sexps* sexps) {
 
 int main(void) {
    while (true) {
-      printf("\n\n\n\nenter stuff: ");
+      printf("\n\n************************\nenter stuff: ");
 
       char str[100]; 
       gets(str); //scanf("%s", str);
