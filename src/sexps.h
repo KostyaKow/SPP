@@ -7,16 +7,17 @@
 #include "string.h"
 
 enum error_type { BAD_INPUT, BAD_PAREN, NULL_PTR };
-enum sexps_type { SEXPS_INT, SEXPS_FLOAT, SEXPS_CHAR }; 
+enum sexps_type { SEXPS_INT, SEXPS_FLOAT, SEXPS_CHAR };
 
 
 struct Sexps {
    const char* str_val; int str_val_len;
 
    void* val;
-   
+
    byte_t type;
    bool_t atom;
+   bool_t single_sexps;
 
    struct Sexps** sub_sexps;
 

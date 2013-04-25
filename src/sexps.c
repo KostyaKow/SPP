@@ -14,13 +14,12 @@ void free(void* ptr) {
 }
 
 void error(const char* str, enum error_type how_bad) {
-   printf("\nλλλerror occured: %s\nλλλexiting...\n", str);
+   printf("\n\terror occured: %s\n\texiting...\n", str);
    exit(-1);
 }
 
 
 int* _get_next_quotes(const char* str, size_t len, int i) {
-   BUG("_get_next_quotes called");
    len = (len == 0) ? strlen(str) : len;
 
    int* to_return = (int*)malloc(sizeof(int) * 2);
@@ -47,9 +46,8 @@ int* _get_next_quotes(const char* str, size_t len, int i) {
    return to_return;
 }
 
-//TODO: optimize
+//TODO: optimize so it will call get_next_quotes only when needed!
 int _increment_counter(const char* str, size_t len, int i, bool_t init) {
-   BUG("_increment counter called");
    len = (len == 0) ? strlen(str) : len;
 
    int* quotes;
@@ -62,7 +60,7 @@ int _increment_counter(const char* str, size_t len, int i, bool_t init) {
 
    if (quotes[0] == quotes[1]) {
       free(quotes);
-      return i + to_add;
+      return i + to_add; ///TODO: return length?
    }
 
    if (i >= (quotes[0] - to_add) && i <= quotes[1]) {
@@ -74,58 +72,73 @@ int _increment_counter(const char* str, size_t len, int i, bool_t init) {
    return i + to_add;
 }
 
-bool_t parse_type(struct Sexps* s) {
+//TODO: move this!
+bool_t isDigit(char c) {
+   return c >= '0' && c <= '9';
+}
+
+bool_t parse_type(struct Sexps* s) { //TODO: work on this!
+   if (!s->str_val || !s->str_val_len)
+      return false;
+
+   if (isDigit(s->str_val[0]))
+      s->atom = true;
+   else s->atom = false;
+
    return true;
 }
 
+char* str_cpy(const char* str, int len) {
+   len = (len == 0) ? strlen(str) : len;
+
+   char* new_str = (char*)malloc(sizeof(char) * (len + 1));
+
+   int i;
+   for (i = 0; i < len && str[i] != '\0'; i++)
+      new_str[i] = str[i];
+
+   new_str[len] = '\n';
+
+   return new_str;
+}
 
 struct Sexps* parse_sexps(const char* sexps, size_t len) {
    len = (len == 0) ? strlen(sexps) : len;
-   BUG_("parse_sexps called");
+
+   printf("parsing: %s", str_cpy(sexps, len));
 
    int begin_paren, end_paren, num_open_paren, num_closed_paren;
-   begin_paren = end_paren = -1;
-   num_open_paren = num_closed_paren = 0;
+   int begin_parens[100]; //I am tired of dynamically allocating crap. 100 levels of nestedness is enough....I am not doing C correctly...
+   begin_paren = end_paren = -1; num_open_paren = num_closed_paren = 0;
 
    struct Sexps* to_ret = (struct Sexps*)malloc(sizeof(struct Sexps));
    to_ret->str_val = sexps; to_ret->str_val_len = len;
-   to_ret->atom = 0;
+   to_ret->sub_sexps = to_ret->sub_sexps_len = to_ret->size_sub_sexps = to_ret->single_sexps = 0;
    if (!parse_type(to_ret)) {
       free(to_ret);
       error("could not deduce the type of sexps", BAD_INPUT);
       return NULL;
    }
-   to_ret->sub_sexps = NULL;
-   to_ret->sub_sexps_len = to_ret->size_sub_sexps = 0;
 
    if (to_ret->atom)
       return to_ret;
 
    int counter = 0;
    while (counter < len) {
-#ifdef DEBUG
-      char msg[1000];
-      sprintf(msg,
-               "\nbegin_paren: %i\nend_paren: %i\nnum_open_paren: %i\n"
-               "num_closed_paren: %i\ncounter: %i\n",
-               begin_paren, end_paren, num_open_paren,
-               num_closed_paren, counter);
-      BUG(msg);
-#endif
+
       int i;
       for (i = _increment_counter(sexps, len, i, true);
            i < len;
            i = _increment_counter(sexps, len, i, false))
       {
          if (sexps[i] == '(') {
-            if (num_open_paren == 0)
+            if (num_open_paren == 1) //1 not 0, because 0 is starting paren
                begin_paren = i;
-           num_open_paren++;
+           begin_parens[num_open_paren++] = i;
          }
-
          if (sexps[i] == ')') {
             if (num_open_paren == 0) {
-               error("found close parenthesis without matching open parenthesis", BAD_PAREN);
+               error("found close parenthesis with no open parenthesis", BAD_PAREN);
                return NULL;
             }
             num_closed_paren++;
@@ -141,7 +154,7 @@ struct Sexps* parse_sexps(const char* sexps, size_t len) {
       if (begin_paren == -1 || end_paren == -1)
         continue;
 
-      BUG("Got here (only for sexps with sub_sexps)");
+      BUG("This expression has sub_sexps!");
 
       if (to_ret->sub_sexps == NULL) {
          to_ret->sub_sexps = (struct Sexps**)malloc(sizeof(struct Sexps**));
@@ -149,14 +162,17 @@ struct Sexps* parse_sexps(const char* sexps, size_t len) {
       }
 
       //TODO: change to a nice container implementation (tree).
+      /*
       if (to_ret->sub_sexps_len + 1 == to_ret->size_sub_sexps)
          to_ret->sub_sexps =
             (struct Sexps**)realloc(to_ret->sub_sexps, sizeof(struct Sexps**) * (to_ret->size_sub_sexps *= 2));
-
-      assert(begin_paren >= 0 && end_paren > begin_paren && end_paren >= 0);
-
-      to_ret->sub_sexps[to_ret->sub_sexps_len++] = parse_sexps(sexps + sizeof(char)*begin_paren, end_paren - begin_paren);
-
+      */
+      if (to_ret->sub_sexps_len + 1 >= to_ret->size_sub_sexps) {
+         to_ret->size_sub_sexps *= 2;
+         to_ret->sub_sexps = (struct Sexps**)realloc(to_ret->sub_sexps, sizeof(struct Sexps**) * to_ret->size_sub_sexps);
+      }
+      //assert(begin_paren >= 0 && end_paren > begin_paren && end_paren >= 0);
+      to_ret->sub_sexps[(to_ret->sub_sexps_len++) - 1] = parse_sexps(sexps + sizeof(char) * begin_paren, end_paren - begin_paren);
    }
    return to_ret;
 }
