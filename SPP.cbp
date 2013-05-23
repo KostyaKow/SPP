@@ -40,6 +40,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="src/misc/misc.h" />
+		<Unit filename="src/misc/tree.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/misc/tree.h" />
 		<Unit filename="src/misc/types.h" />
 		<Unit filename="src/sexps.c">
 			<Option compilerVar="CC" />
@@ -48,6 +52,16 @@
 		<Extensions>
 			<code_completion />
 			<debugger />
+			<DoxyBlocks>
+				<comment_style block="0" line="0" />
+				<doxyfile_project />
+				<doxyfile_build />
+				<doxyfile_warnings />
+				<doxyfile_output />
+				<doxyfile_dot />
+				<general />
+			</DoxyBlocks>
+			<envvars />
 		</Extensions>
 	</Project>
 </CodeBlocks_project_file>
