@@ -23,7 +23,7 @@ void printcnf(char c, int n, const char* str) { //print character c n times, bef
 }
 
 void _print_sexps(struct Sexps* sexps, int nesting_level) {
-   BUG_("printing sexps!!!!!!!!!!!!!");
+   BUG_PRINT("printing sexps!!!");
    if (sexps == NULL)
       error("Null pointer passed to _print_sexps", NULL_PTR);
 

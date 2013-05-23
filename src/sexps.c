@@ -9,16 +9,6 @@
 
 #include <assert.h>
 
-void free(void* ptr) {
-   ptr = realloc(ptr, 0); //"ptr = " to shut up gcc
-}
-
-void error(const char* str, enum error_type how_bad) {
-   printf("\n\terror occured: %s\n\texiting...\n", str);
-   exit(-1);
-}
-
-
 int* _get_next_quotes(const char* str, size_t len, int i) {
    len = (len == 0) ? strlen(str) : len;
 
@@ -72,11 +62,6 @@ int _increment_counter(const char* str, size_t len, int i, bool_t init) {
    return i + to_add;
 }
 
-//TODO: move this!
-bool_t isDigit(char c) {
-   return c >= '0' && c <= '9';
-}
-
 bool_t parse_type(struct Sexps* s) { //TODO: work on this!
    if (!s->str_val || !s->str_val_len)
       return false;
@@ -88,28 +73,14 @@ bool_t parse_type(struct Sexps* s) { //TODO: work on this!
    return true;
 }
 
-char* str_cpy(const char* str, int len) {
-   len = (len == 0) ? strlen(str) : len;
-
-   char* new_str = (char*)malloc(sizeof(char) * (len + 1));
-
-   int i;
-   for (i = 0; i < len && str[i] != '\0'; i++)
-      new_str[i] = str[i];
-
-   new_str[len] = '\n';
-
-   return new_str;
-}
-
 struct Sexps* parse_sexps(const char* sexps, size_t len) {
    len = (len == 0) ? strlen(sexps) : len;
 
    printf("parsing: %s", str_cpy(sexps, len));
 
    int begin_paren, end_paren, num_open_paren, num_closed_paren;
-   int begin_parens[100]; //I am tired of dynamically allocating crap. 100 levels of nestedness is enough....I am not doing C correctly...
-   begin_paren = end_paren = -1; num_open_paren = num_closed_paren = 0;
+   int begin_parens[100]; //100 levels of nestedness should be enough
+   begin_paren = end_paren = num_open_paren = -1; num_closed_paren = -1;
 
    struct Sexps* to_ret = (struct Sexps*)malloc(sizeof(struct Sexps));
    to_ret->str_val = sexps; to_ret->str_val_len = len;
@@ -123,44 +94,46 @@ struct Sexps* parse_sexps(const char* sexps, size_t len) {
    if (to_ret->atom)
       return to_ret;
 
-   int counter = 0;
-   while (counter < len) {
-
-      int i;
+   int i = 0;
+   while (i < len) {
+      BUG_PRINT("while loop!");
+      bool_t found_begin = false;
+      end_paren = -1; begin_parens[num_open_paren] = 0;
       for (i = _increment_counter(sexps, len, i, true);
            i < len;
            i = _increment_counter(sexps, len, i, false))
       {
+         BUG_PRINT("Inside for loop..i: %i", i);
          if (sexps[i] == '(') {
-            if (num_open_paren == 1) //1 not 0, because 0 is starting paren
-               begin_paren = i;
-           begin_parens[num_open_paren++] = i;
+            begin_parens[++num_open_paren] = i;
+            found_begin = true;
          }
-         if (sexps[i] == ')') {
-            if (num_open_paren == 0) {
+
+         else if (sexps[i] == ')') { //need to decrease the num_open_paren somewhere...
+            BUG_PRINT("else");
+            if (num_open_paren == -1) {
                error("found close parenthesis with no open parenthesis", BAD_PAREN);
                return NULL;
             }
             num_closed_paren++;
-
-            if (num_closed_paren == num_open_paren) {
-               end_paren = i;
-               break;
-            }
+            end_paren = i;
+            break;
          }
       }
-      counter = i;
-
-      if (begin_paren == -1 || end_paren == -1)
+      BUG_PRINT("---!!!!---%i%i", num_open_paren, begin_parens[num_open_paren]);
+      //should check that num_open_paren is 1 (begin paren. then ignore, since it is our main one, and not sub_sexps
+      if (!found_begin || end_paren == -1 || begin_parens[num_open_paren] == 0) { //!begin_parens[num_open_paren-1])
+        BUG_PRINT("****"); i++;
         continue;
+      }
 
-      BUG("This expression has sub_sexps!");
+      BUG_PRINT("This expression has sub_sexps!");
 
-      if (to_ret->sub_sexps == NULL) {
+      if (to_ret->sub_sexps == NULL) { //allocate
          to_ret->sub_sexps = (struct Sexps**)malloc(sizeof(struct Sexps**));
          to_ret->sub_sexps_len = to_ret->size_sub_sexps = 1;
       }
-
+      BUG_PRINT("allocated sub_sexps pointer pointers");
       //TODO: change to a nice container implementation (tree).
       /*
       if (to_ret->sub_sexps_len + 1 == to_ret->size_sub_sexps)
@@ -171,11 +144,21 @@ struct Sexps* parse_sexps(const char* sexps, size_t len) {
          to_ret->size_sub_sexps *= 2;
          to_ret->sub_sexps = (struct Sexps**)realloc(to_ret->sub_sexps, sizeof(struct Sexps**) * to_ret->size_sub_sexps);
       }
-      //assert(begin_paren >= 0 && end_paren > begin_paren && end_paren >= 0);
-      to_ret->sub_sexps[(to_ret->sub_sexps_len++) - 1] = parse_sexps(sexps + sizeof(char) * begin_paren, end_paren - begin_paren);
+      BUG_PRINT("reallocated sub_sexps pointers");
+
+      printf("%i", begin_parens[num_open_paren]);
+      BUG_PRINT("k- begin_parens[num_open_paren]: %i \nend_paren: %i", begin_parens[num_open_paren], end_paren);
+      printf("got here");
+      BUG("new sub_sexps: %s", str_cpy(
+                                       sexps[begin_parens[num_open_paren]],
+                                       end_paren - begin_parens[num_open_paren]));
+      assert(begin_paren >= 0 && end_paren > begin_paren && end_paren >= 0);
+      to_ret->sub_sexps[(to_ret->sub_sexps_len++) - 1] = parse_sexps(sexps + sizeof(char) * begin_paren, end_paren - begin_parens[num_open_paren] + 1);
+      num_closed_paren--; num_open_paren--;
    }
    return to_ret;
 }
+
 
 
 
