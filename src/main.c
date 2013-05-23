@@ -3,6 +3,7 @@
 #include "sexps.h"
 #include "misc/types.h"
 #include "misc/misc.h"
+#include "misc/tree.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -63,6 +64,21 @@ void print_sexps(struct Sexps* sexps) {
 }
 
 int main(void) {
+
+   char* hello = "test";//{"hello", "world"};
+
+   tree_t* tree;
+   if (new_tree(tree)) {
+      tree_add(tree, hello[1]);
+      tree_add(tree1, hello[0]);
+      char* str = (char**)tree1->data;
+      char first  = str[0];
+      char second = str[1];
+
+      printf("%s", hello);
+   }
+
+
    while (true) {
       printf("\n\n************************\nenter stuff: ");
 

@@ -84,7 +84,8 @@ struct Sexps* parse_sexps(const char* sexps, size_t len) {
 
    struct Sexps* to_ret = (struct Sexps*)malloc(sizeof(struct Sexps));
    to_ret->str_val = sexps; to_ret->str_val_len = len;
-   to_ret->sub_sexps = to_ret->sub_sexps_len = to_ret->size_sub_sexps = to_ret->single_sexps = 0;
+   to_ret->sub_sexps = NULL;
+   to_ret->sub_sexps_len = to_ret->size_sub_sexps = to_ret->single_sexps = 0;
    if (!parse_type(to_ret)) {
       free(to_ret);
       error("could not deduce the type of sexps", BAD_INPUT);
