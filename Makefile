@@ -9,6 +9,6 @@ samples:
 	cd src/samples; make
 
 clean:
-	rm -rf *.o spp *.swp *~
-	rm -rf src/*.o src/spp src/*.swp src/*~
-	rm -rf src/samples/*.o src/samples/*.swp src/samples/*~
+	rm -rf *.o *.swp *~ obj bin
+	cd src; make clean
+	cd src/samples; make clean

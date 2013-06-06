@@ -7,7 +7,7 @@ Compilation instruction:
 
 GNU/Linux & other Unix systems using GCC:
 
-   cd SPP; make
+<i>cd SPP; make</i>
 
 or you can use the Code::Blocks project.
 
