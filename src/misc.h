@@ -1,7 +1,7 @@
 #ifndef MISC_H_INCLUDE
 #define MISC_H_INCLUDE
 
-#include "../config.h"
+#include "config.h"
 
 #include <stdint.h>
 

@@ -1,7 +1,8 @@
 #include "misc.h"
 
-#include <termios.h>
+#include <stdlib.h>
 #include <stdio.h>
+#include <termios.h>
 
 void error(const char* str, enum error_type how_bad) {
    printf("\n\terror occured: %s\n\texiting...\n", str);
@@ -12,7 +13,7 @@ void free(void* ptr) {
    ptr = realloc(ptr, 0); //"ptr = " to shut up gcc
 }
 
-bool_t isDigit(char c) {
+bool isDigit(char c) {
    return c >= '0' && c <= '9';
 }
 

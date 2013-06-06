@@ -41,7 +41,7 @@ inline void delete_list_rec_func(list* lst, void(*custom_free)(void*)) {
    free(lst);
 }
 
-inline void list_add(void* elem, list* lst) {
+inline void list_push(void* elem, list* lst) {
    if (lst->num_elem == lst->size)
       lst->data = realloc(lst->data, (lst->size *= 3) * sizeof(void*));
    lst->data[lst->num_elem++] = elem;
@@ -59,6 +59,6 @@ inline void list_shrink(list* lst) {
 }
 
 inline void* list_get(list* lst, int elem) {
-   return lst->data[i];
+   return lst->data[elem];
 }
 

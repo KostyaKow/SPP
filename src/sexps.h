@@ -3,8 +3,8 @@
 
 #include "config.h"
 
+#include <stdlib.h> //size_t
 #include <stdint.h>
-
 
 enum sexps_type { SEXPS_INT, SEXPS_FLOAT, SEXPS_CHAR };
 

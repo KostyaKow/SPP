@@ -1,7 +1,7 @@
 #include "config.h"
 #include "sexps.h"
-#include "misc/misc.h"
-#include "misc/tree.h"
+#include "misc.h"
+#include "list.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -63,21 +63,6 @@ void print_sexps(struct Sexps* sexps) {
 }
 
 int main(void) {
-
-   char* hello = "test";//{"hello", "world"};
-
-   tree_t* tree;
-   if (new_tree(tree)) {
-      tree_add(tree, hello[1]);
-      tree_add(tree1, hello[0]);
-      char* str = (char**)tree1->data;
-      char first  = str[0];
-      char second = str[1];
-
-      printf("%s", hello);
-   }
-
-
    while (true) {
       printf("\n\n************************\nenter stuff: ");
 
@@ -86,22 +71,6 @@ int main(void) {
 
       print_sexps(parse_sexps(str, 0));
    }
-      /*
-      int* n = _get_next_quotes(str, 0, 0);
-
-      //printf("\n********\nnumbers: %i  %i\n********\n", n[0], n[1]);
-
-
-      int i;
-      for (i = _increment_counter(str, 0, 0, true);
-           i < strlen(str);
-           i = _increment_counter(str, 0, i, false))
-      {
-         //printf("%c", str[i]);
-      }
-
-   }
-   */
 
    return 0;
 }

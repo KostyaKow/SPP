@@ -1,6 +1,6 @@
 #include "config.h"
 #include "sexps.h"
-#include "misc/misc.h"
+#include "misc.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -17,7 +17,7 @@ int* _get_next_quotes(const char* str, size_t len, int i) {
    if (len <= i)
       return to_return;
 
-   bool_t have_1st_quote = false;
+   bool have_1st_quote = false;
    while (i < len) {
       if (str[i] == '"') {
          if (!have_1st_quote) {
@@ -36,7 +36,7 @@ int* _get_next_quotes(const char* str, size_t len, int i) {
 }
 
 //TODO: optimize so it will call get_next_quotes only when needed!
-int _increment_counter(const char* str, size_t len, int i, bool_t init) {
+int _increment_counter(const char* str, size_t len, int i, bool init) {
    len = (len == 0) ? strlen(str) : len;
 
    int* quotes;
@@ -61,7 +61,7 @@ int _increment_counter(const char* str, size_t len, int i, bool_t init) {
    return i + to_add;
 }
 
-bool_t parse_type(struct Sexps* s) { //TODO: work on this!
+bool parse_type(struct Sexps* s) { //TODO: work on this!
    if (!s->str_val || !s->str_val_len)
       return false;
 
@@ -97,7 +97,7 @@ struct Sexps* parse_sexps(const char* sexps, size_t len) {
    int i = 0;
    while (i < len) {
       BUG_PRINT("while loop!");
-      bool_t found_begin = false;
+      bool found_begin = false;
       end_paren = -1; begin_parens[num_open_paren] = 0;
       for (i = _increment_counter(sexps, len, i, true);
            i < len;
