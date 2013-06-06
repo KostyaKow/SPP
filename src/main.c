@@ -1,13 +1,12 @@
 #include "config.h"
-
 #include "sexps.h"
-#include "misc/types.h"
 #include "misc/misc.h"
 #include "misc/tree.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdint.h>
 
 void get_some() {
    char* n = (char*)malloc(100*sizeof(char));

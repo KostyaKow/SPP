@@ -40,11 +40,6 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="src/misc/misc.h" />
-		<Unit filename="src/misc/tree.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="src/misc/tree.h" />
-		<Unit filename="src/misc/types.h" />
 		<Unit filename="src/sexps.c">
 			<Option compilerVar="CC" />
 		</Unit>

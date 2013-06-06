@@ -1,12 +1,11 @@
 #include "config.h"
 #include "sexps.h"
-#include "misc/types.h"
 #include "misc/misc.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
+#include <stdint.h>
 #include <assert.h>
 
 int* _get_next_quotes(const char* str, size_t len, int i) {

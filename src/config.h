@@ -3,4 +3,6 @@
 
 #define DEBUG 1
 
+#include <stdbool.h>
+
 #endif //CONFIG_H_INCLUDE

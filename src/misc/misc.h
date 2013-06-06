@@ -2,14 +2,15 @@
 #define MISC_H_INCLUDE
 
 #include "../config.h"
-#include "types.h"
+
+#include <stdint.h>
 
 enum error_type { BAD_INPUT, BAD_PAREN, NULL_PTR };
 
 char getch(void);
 void error(const char* str, enum error_type how_bad);
 void free(void* ptr);
-bool_t isDigit(char c);
+bool isDigit(char c);
 char* str_cpy(const char* str, int len);
 
 

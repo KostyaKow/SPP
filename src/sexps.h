@@ -3,10 +3,9 @@
 
 #include "config.h"
 
-#include "misc/types.h"
-#include "string.h"
+#include <stdint.h>
 
-\
+
 enum sexps_type { SEXPS_INT, SEXPS_FLOAT, SEXPS_CHAR };
 
 
@@ -15,18 +14,18 @@ struct Sexps {
 
    void* val;
 
-   byte_t type;
-   bool_t atom;
-   bool_t single_sexps;
+   uint8_t type;
+   bool atom;
+   bool single_sexps;
 
    struct Sexps** sub_sexps;
 
-   uint_t size_sub_sexps, sub_sexps_len;
+   uint16_t size_sub_sexps, sub_sexps_len;
 };
 
 
 struct Sexps* parse_sexps(const char* sexps, size_t len);
 int* _get_next_quotes(const char* str, size_t len, int i);
-int _increment_counter(const char* str, size_t len, int i, bool_t init);
+int _increment_counter(const char* str, size_t len, int i, bool init);
 
 #endif //SEXPS_H_INCLUDE
