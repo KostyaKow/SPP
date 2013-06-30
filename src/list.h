@@ -12,12 +12,58 @@ typedef struct list {
    void** data;
 } list;
 
+inline void* list_get(list* lst, int elem) {
+   return lst->data[elem];
+}
+
+
 inline list* new_list() {
    list* lst = (list*)malloc(sizeof(list));
    lst->num_elem = 0;
    lst->size = 3;
    lst->data = malloc(3 * sizeof(void*));
    return lst;
+}
+
+inline void list_push(list* lst, void* elem) {
+   if (lst->num_elem >= lst->size) {
+      lst->size *= 2;
+      lst->data = realloc(lst->data, lst->size * sizeof(void*));
+   }
+   lst->data[lst->num_elem++] = elem;
+}
+
+inline void list_push_array(list* lst, void** arr, int num_elem) {
+   if (lst->num_elem + num_elem >= lst->size) {
+      lst->size = num_elem + lst->size * 2;
+      lst->data = realloc(lst->data, lst->size * sizeof(void*));
+   }
+   for (int i = 0; i < num_elem; i++, lst->num_elem++)
+      lst->data[lst->num_elem] = arr[i];
+}
+
+inline void list_shrink_to_fit(list* lst) {
+   if (lst->num_elem > lst->size) {
+      lst->size = lst->num_elem;
+      lst = realloc(lst->data, lst->size);
+   }
+}
+
+inline void* list_pop(list* lst) {
+   void* ret = lst->data[lst->num_elem--];
+   list_shrink_to_fit(lst);
+   return ret;
+}
+
+inline void** list_pop_num(list* lst, int num) {
+    void** ret = malloc(num * sizeof(void*));
+
+    for (int i = 0; i < num; i++)
+        ret[i] = lst->data[lst->num_elem--];
+
+    list_shrink_to_fit(lst);
+
+    return ret;
 }
 
 inline void delete_list(list* lst) {
@@ -40,25 +86,3 @@ inline void delete_list_rec_func(list* lst, void(*custom_free)(void*)) {
    free(lst->data);
    free(lst);
 }
-
-inline void list_shrink(list* lst) {
-   if (lst->num_elem > lst->size)
-      lst = realloc(lst->data, lst->size = lst->num_elem);
-}
-
-inline void* list_pop(list* lst) {
-   void* ret = lst->data[lst->num_elem--];
-   list_shrink(lst);
-   return ret;
-}
-
-inline void list_push(void* elem, list* lst) {
-   if (lst->num_elem == lst->size)
-      lst->data = realloc(lst->data, (lst->size *= 3) * sizeof(void*));
-   lst->data[lst->num_elem++] = elem;
-}
-
-inline void* list_get(list* lst, int elem) {
-   return lst->data[elem];
-}
-
