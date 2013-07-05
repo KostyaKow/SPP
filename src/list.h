@@ -1,9 +1,16 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-//TODO: check if the struct in the looop really nessasary? (I am writing this at 11:20 PM...)
 #define _LIST_FOR_EACH(lst, elem, type) \
    for (struct { type* elem; int i; } _LIST = {(type*)lst->data[0], 0}; _LIST.i < lst->num_elem; _LIST.i++, _LIST.elem = (type*)lst->data[_LIST.i])
+
+/*
+try
+
+#define _LIST_FOR_EACH(lst, elem, type) \
+   for (type* elem = (type*)lst->data[0]; elem != lst->data[lst->num_elem]; elem = ((type*)&elem)[1])
+
+*/
 
 #define _LIST_FOR_EACH_VOID(lst, elem) \
    _LIST_FOR_EACH(lst, elem, void)
