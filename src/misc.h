@@ -1,26 +1,29 @@
 #ifndef MISC_H_INCLUDE
 #define MISC_H_INCLUDE
 
-#include "config.h"
-#include "sexps.h"
-
+#include <stdbool.h>
 #include <stdint.h>
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <assert.h>
+
+#include "config.h"
 
 enum error_type { BAD_INPUT, BAD_PAREN, NULL_PTR };
 
 char getch(void);
 void error(const char* str, enum error_type how_bad);
-void free(void* ptr);
 bool isDigit(char c);
 char* str_cpy(const char* str, int len); //returns a new string with len number of characters from str
 
-void printcnf(char c, int n, const char* str); //print character c n times, before printing str
-void _print_sexps(struct Sexps* sexps, int nesting_level);
+void printcnf(char c, int n, const char* str);
 
-void print_sexps(struct Sexps* sexps);
+//void _print_sexps(struct Sexps* sexps, int nesting_level);
+//void print_sexps(struct Sexps* sexps);
 
 
-//is there a good reason no-one tabes defines???
 //TODO: print to stderr, not stdout
 #ifdef DEBUG
    #include <stdio.h>

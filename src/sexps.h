@@ -1,10 +1,7 @@
 #ifndef SEXPS_H_INCLUDE
 #define SEXPS_H_INCLUDE
 
-#include "config.h"
-
-#include <stdlib.h> //size_t
-#include <stdint.h>
+#include "misc.h"
 
 enum sexps_type { SEXPS_INT, SEXPS_FLOAT, SEXPS_CHAR };
 

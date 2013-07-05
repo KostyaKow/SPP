@@ -32,7 +32,13 @@
 			<Add option="-Wall" />
 		</Compiler>
 		<Unit filename="src/config.h" />
-		<Unit filename="src/lexer.cpp" />
+		<Unit filename="src/errors.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/errors.h" />
+		<Unit filename="src/lexer.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="src/lexer.h" />
 		<Unit filename="src/list.h" />
 		<Unit filename="src/main.c">
@@ -42,6 +48,15 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="src/misc.h" />
+		<Unit filename="src/samples/bug_example.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/samples/list_test.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/samples/test.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="src/sexps.c">
 			<Option compilerVar="CC" />
 		</Unit>

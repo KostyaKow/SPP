@@ -1,11 +1,14 @@
 #ifndef LEXER_H_INCLUDED
 #define LEXER_H_INCLUDED
 
+#include "misc.h"
+#include "errors.h"
+
 typedef struct lexeme {
-    enum { STRING, CHAR, NUM } type;
+   enum { IDENTIFIER, NUMBER, STRING, CHAR };
 
     void *val, *str_val;
-};
+} lexeme_t;
 
 typedef struct lex_table {
    const char* str_val; int str_val_len;
@@ -16,16 +19,17 @@ typedef struct lex_table {
    bool atom;
    bool single_sexps;
 
-   struct Sexps** sub_sexps;
+   list* lexemes;
 
    uint16_t size_sub_sexps, sub_sexps_len;
-} lex_table;
+} lex_table_t;
 
+extern lex_table_t* lex_table;
 
-char* remove_comments(const char* str);
+error lex_table_add(const char* str, int len);
 
-lex_table* format_sexps(const char* str, size_t length) {
-
+inline char* remove_comments(const char* str) {
+    return (char*)str;
 }
 
 

@@ -1,12 +1,5 @@
-#include "config.h"
 #include "sexps.h"
-#include "misc.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdint.h>
-#include <assert.h>
 
 int* _get_next_quotes(const char* str, size_t len, int i) {
    len = (len == 0) ? strlen(str) : len;
@@ -150,7 +143,7 @@ struct Sexps* parse_sexps(const char* sexps, size_t len) {
       BUG_PRINT("k- begin_parens[num_open_paren]: %i \nend_paren: %i", begin_parens[num_open_paren], end_paren);
       printf("got here");
       BUG("new sub_sexps: %s", str_cpy(
-                                       sexps[begin_parens[num_open_paren]],
+                                       &sexps[begin_parens[num_open_paren]],
                                        end_paren - begin_parens[num_open_paren]));
       assert(begin_paren >= 0 && end_paren > begin_paren && end_paren >= 0);
       to_ret->sub_sexps[(to_ret->sub_sexps_len++) - 1] = parse_sexps(sexps + sizeof(char) * begin_paren, end_paren - begin_parens[num_open_paren] + 1);

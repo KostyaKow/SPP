@@ -1,21 +1,32 @@
-#include "config.h"
-#include "misc.h"
-#include "sexps.h"
 #include "list.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdint.h>
+#include "misc.h"
+#include "lexer.h"
+#include "errors.h"
 
-int main(void) {
-   while (true) {
-      printf("\n\n************************\nenter stuff: ");
+lex_table_t* lex_table = NULL;
 
-      char str[100];
-      scanf("%s", str);
+bool init(int nargs, char** args) {
+   lex_table = (lex_table*)malloc(sizeof(lex_table_t));
+   lex_table->lexemes = new_list();
+}
 
-      print_sexps(parse_sexps(str, 0));
+
+
+int main(int nargs, char** args) {
+   init(nargs, args);
+
+
+   printf("\n\n*********\n>");
+
+   char str[10000];
+   bool terminate = false;
+
+
+   while (!terminate) {
+      terminate = handle_error(lex_table_add(scanf(str, "%10000[^\n]"), str));
+      printf("\n\n\n>");
+
    }
 
    return 0;

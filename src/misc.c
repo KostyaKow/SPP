@@ -9,9 +9,6 @@ void error(const char* str, enum error_type how_bad) {
    exit(-1);
 }
 
-/*void free(void* ptr) {
-   ptr = realloc(ptr, 0); //"ptr = " to shut up gcc
-}*/
 void printcnf(char c, int n, const char* str) { //print character c n times, before printing str
    while (n > 0) {
       printf("%c", c);
@@ -74,7 +71,7 @@ inline char getche(void) {
      return getch_(1);
 }
 
-inline void print_sexps(struct Sexps* sexps) {
+/*inline void print_sexps(struct Sexps* sexps) {
    _print_sexps(sexps, 0);
 }
 
@@ -112,4 +109,4 @@ void _print_sexps(struct Sexps* sexps, int nesting_level) {
       printcnf('\t', nesting_level, "\nsexps: ");
       printf("%s", sexps->str_val);
    }
-}
+}*/
