@@ -1,21 +1,15 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#define _LIST_FOR_EACH(lst, elem, type) \
-   for (struct { type* elem; int i; } _LIST = {(type*)lst->data[0], 0}; _LIST.i < lst->num_elem; _LIST.i++, _LIST.elem = (type*)lst->data[_LIST.i])
-
-/*
-try
 
 #define _LIST_FOR_EACH(lst, elem, type) \
-   for (type* elem = (type*)lst->data[0]; elem != lst->data[lst->num_elem]; elem = ((type*)&elem)[1])
-
-*/
+   for (type* elem = (type*)lst->data; elem != (type*)&lst->data[lst->num_elem]; elem = (type*)&elem[0])
 
 #define _LIST_FOR_EACH_VOID(lst, elem) \
    _LIST_FOR_EACH(lst, elem, void)
 //for (struct { void* elem; int i; } _LIST = {0, lst->data[0]}; _LIST.i < lst->num_elem; _LIST.i++, _LIST.elem = lst->data[_LIST.i])
 
+#define MAKE_NEW_LIST
 typedef struct list {
    int num_elem, size;
    void** data;
@@ -82,16 +76,16 @@ inline void delete_list(list* lst) {
 
 //delete all data in the list (TODO: not really recursively? change name?)
 inline void delete_list_rec(list* lst) {
-   _LIST_FOR_EACH_VOID(lst, elem)
-      free(_LIST.elem);
+   //_LIST_FOR_EACH_VOID(lst, elem)
+   //   free(elem);
    free(lst->data);
    free(lst);
 }
 
 //supplies destructor. assumes the distructor works for all pointers
 inline void delete_list_rec_func(list* lst, void(*custom_free)(void*)) {
-   _LIST_FOR_EACH_VOID(lst, elem)
-      custom_free(_LIST.elem);
+   //_LIST_FOR_EACH_VOID(lst, elem)
+   //   custom_free(_LIST.elem);
    free(lst->data);
    free(lst);
 }
@@ -101,11 +95,15 @@ int main() {
    list* lst = new_list();
 
    for (int i = 0; i < 10; i++) {
-      list_push(lst, (void*)"hello");
+      char* word = (char*)malloc(sizeof(char)*10);
+      word = "hello";
+      list_push(lst, word);
    }
 
-   _LIST_FOR_EACH(lst, elem, int) {
-      printf("\ncurrent:%s", *((void**)(&_LIST)));//*_LIST.elem);//*((&_LIST)+0));
+   int i = 0;
+   _LIST_FOR_EACH(lst, elem, char*) {
+      printf("\ncurrent:%s", *elem);//*_LIST.elem);//*((&_LIST)+0));
+      i++; if (i == 10) break;
    }
 }
 */
