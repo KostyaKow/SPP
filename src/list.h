@@ -1,109 +1,218 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+/*
+//STILL MORE READABLE THEN C++ TEMPLATES! ok, maybe not...
+//I will probably switch to Linux kernel lists when I am tired of playing with preprocessor.
 
-#define _LIST_FOR_EACH(lst, elem, type) \
-   for (type* elem = (type*)lst->data; elem != (type*)&lst->data[lst->num_elem]; elem = (type*)&elem[0])
+//Usage:
 
-#define _LIST_FOR_EACH_VOID(lst, elem) \
-   _LIST_FOR_EACH(lst, elem, void)
-//for (struct { void* elem; int i; } _LIST = {0, lst->data[0]}; _LIST.i < lst->num_elem; _LIST.i++, _LIST.elem = lst->data[_LIST.i])
+//To make a new list, you can do something like this:
 
-#define MAKE_NEW_LIST
-typedef struct list {
-   int num_elem, size;
+NEW_LIST_OF int NAMED lst INITIALIZE;         //declare list of integers named lst, and initialize it so it will be ready for usage.
+NEW_LIST_OF char NAMED *lst2 INITIALIZE_PTR;  //pointer to char list named lst2. notice INITIALIZE_PTR
+
+//makes two lists for ints -- ptr to lst3 and lst4
+NEW_LIST_OF int NAMED *lst3 INITIALIZE_PTR, lst4 INITIALIZE;
+
+//you should probably follow the syntax of declaration or you will get errors, but you can also do:
+NEW_LIST_OF int
+    NAMED *lst3 INITIALIZE_PTR, lst4 INITIALIZE;
+
+
+*/
+
+
+//do *NOT* use this structure!
+struct __list {
+   int length, size;
    void** data;
-} list;
+};
 
-inline void* list_get(list* lst, int elem) {
-   return lst->data[elem];
-}
+#define CAST(type, val) (*((type*)(&(val))))
 
+#define PASTE(x, y) x ## _ ## y
+#define NEW_NAME_(x) PASTE(random_var, x)
+#define NEW_NAME NEW_NAME_(__LINE__)
+///-------------------------------------
 
-inline list* new_list() {
-   list* lst = (list*)malloc(sizeof(list));
-   lst->num_elem = 0;
+#define LIST_OF \
+   struct { \
+      int length, size; \
+
+#define IS_TYPE \
+   * data; } NEW_NAME; \
+   typedef __typeof__(NEW_NAME)
+
+#define NAMED \
+   * data; } NEW_NAME; \
+   NEW_NAME.length = 0; NEW_NAME.size = 3; NEW_NAME.data = (__typeof__(NEW_NAME.data)) malloc(sizeof(NEW_NAME.data) * NEW_NAME.length); \
+   __typeof__(NEW_NAME)
+
+#define INITIALIZE \
+   = NEW_NAME
+
+#define INITIALIZE_PTR \
+   = &NEW_NAME
+
+__list* __new_list() {
+   __list *lst = (__list*)malloc(sizeof(__list));
+   lst->length = 0;
    lst->size = 3;
-   lst->data = (void**)malloc(3 * sizeof(void*));
+   lst->data = (__typeof__(lst->data)) malloc(sizeof(lst->data) * lst->length);
    return lst;
 }
 
-inline void list_push(list* lst, void* elem) {
-   if (lst->num_elem >= lst->size) {
-      lst->size *= 2;
-      lst->data = (void**)realloc(lst->data, lst->size * sizeof(void*));
-   }
-   lst->data[lst->num_elem++] = elem;
-}
+#define NEW_LIST(type)     (*((type*)__new_list()))
 
-inline void list_push_array(list* lst, void** arr, int num_elem) {
-   if (lst->num_elem + num_elem >= lst->size) {
-      lst->size = num_elem + lst->size * 2;
-      lst->data = (void**)realloc(lst->data, lst->size * sizeof(void*));
-   }
-   for (int i = 0; i < num_elem; i++, lst->num_elem++)
-      lst->data[lst->num_elem] = arr[i];
-}
+///-------------------------------------
 
-inline void list_shrink_to_fit(list* lst) {
-   if (lst->num_elem > lst->size) {
-      lst->size = lst->num_elem;
-      lst = (list*)realloc(lst->data, lst->size);
-   }
-}
+#define LIST_FOR_EACH_(lst, elem) \
+   for (__typeof__(lst->data) elem = lst->data; &(*elem) != &(lst->data[lst->length]); elem++)
 
-inline void* list_pop(list* lst) {
-   void* ret = lst->data[lst->num_elem--];
-   list_shrink_to_fit(lst);
+#define LIST_FOR_EACH_FUNC_(lst, f) do { \
+      LIST_FOR_EACH_(lst, elem) \
+         f(*elem); \
+   } while (0)
+
+#define LIST_PUSH_(lst, elem) \
+   do { \
+      if (lst->length >= lst->size) { \
+         lst->size *= 2; \
+         lst->data = (__typeof__(lst->data))realloc(lst->data, lst->size * sizeof(lst->data)); \
+      } \
+      lst->data[lst->length++] = elem; \
+   } while (0)
+
+#define LIST_GET_(lst, elem) (lst->data[elem])
+
+#define LIST_PUSH_ARRAY_(lst, arr, arr_length) do { \
+      if (lst->length + arr_length >= lst->size) { \
+         lst->size = arr_length + lst->size * 2; \
+         lst->data = (__typeof__(lst->data)) realloc(lst->data, lst->size * sizeof(lst->data)); \
+      } \
+      for (int i = 0; i < arr_length; i++, lst->length++) \
+         lst->data[lst->length] = arr[i]; \
+   } while (0)
+
+#define LIST_SHRINK_TO_FIT_(lst) do { \
+      if (lst->length > lst->size) { \
+         lst->size = lst->length; \
+         lst = (__typeof__(lst))realloc(lst->data, lst->size); \
+      } \
+   } while (0)
+
+//inline function is so it will be 1 statement
+inline void* __list_pop(__list* lst) {
+   void* ret = lst->data[lst->length--];
+   LIST_SHRINK_TO_FIT_((lst));
    return ret;
 }
 
-inline void** list_pop_num(list* lst, int num) {
+#define LIST_POP_(lst) \
+   (*((__typeof__(lst->data[0])*) __list_pop( (__list*)lst)))
+
+inline void** __list_pop_num(__list* lst, int num) {
     void** ret = (void**)malloc(num * sizeof(void*));
 
     for (int i = 0; i < num; i++)
-        ret[i] = lst->data[lst->num_elem--];
+        ret[i] = lst->data[lst->length--];
 
-    list_shrink_to_fit(lst);
+    LIST_SHRINK_TO_FIT_((lst));
 
     return ret;
 }
 
-inline void delete_list(list* lst) {
-   free(lst->data);
-   free(lst);
+#define LIST_POP_NUM_(lst, num) \
+   (*((__typeof__(lst->data)*) __list_pop_num((__list*)lst, num)))
+
+
+#define DELETE_LIST_(lst) do { \
+      free(lst->data); \
+      free(lst); \
+   } while (0)
+
+
+#define DELETE_LIST_REC_(lst) do { \
+      LIST_FOR_EACH_(lst, elem) \
+         free(*elem); \
+      free(lst->data); \
+      free(lst); \
+   } while (0)
+
+
+#define DELETE_LIST_REC_FUNC_(lst, f) do { \
+      LIST_FOR_EACH_(lst, elem) \
+         f(*elem); \
+      free(lst->data); \
+      free(lst); \
+   } while (0)
+
+#define LIST_FOR_EACH(lst, elem)                LIST_FOR_EACH_       ((lst), elem)
+#define LIST_FOR_EACH_FUNC(lst, f)              LIST_FOR_EACH_FUNC_  ((lst), (f))
+#define LIST_PUSH(lst, elem)                    LIST_PUSH_           ((lst), (elem))
+#define LIST_GET(lst, elem)                     LIST_GET_            ((lst), (elem))
+#define LIST_PUSH_ARRAY(lst, arr, arr_length)   LIST_PUSH_ARRAY_     ((lst), (arr), (arr_length))
+#define LIST_SHRINK_TO_FIT(lst)                 LIST_SHRINK_TO_FIT_  ((lst))
+#define LIST_POP(lst)                           LIST_POP_            ((lst))
+#define LIST_POP_NUM(lst, num)                  LIST_POP_NUM_        ((lst), (num))
+#define DELETE_LIST(lst)                        DELETE_LIST_         ((lst))
+#define DELETE_LIST_REC(lst)                    DELETE_LIST_REC_     ((lst))                          //delete list and all its members
+#define DELETE_LIST_REC_FUNC(lst, f)            DELETE_LIST_REC_FUNC_((lst), (f))                     //uses custom callback f to delete each element
+
+//nice syntactic sugar you may want to use
+#define auto
+#define in ,
+#define for_each_(b, a) LIST_FOR_EACH(&a, b)
+#define for_each(b) for_each_(b)
+
+
+LIST_OF int IS_TYPE int_list_t;
+
+void print(int_list_t lst) {
+   for_each(number in lst)
+      printf("\n%i", *number);
 }
 
-//delete all data in the list (TODO: not really recursively? change name?)
-inline void delete_list_rec(list* lst) {
-   //_LIST_FOR_EACH_VOID(lst, elem)
-   //   free(elem);
-   free(lst->data);
-   free(lst);
-}
 
-//supplies destructor. assumes the distructor works for all pointers
-inline void delete_list_rec_func(list* lst, void(*custom_free)(void*)) {
-   //_LIST_FOR_EACH_VOID(lst, elem)
-   //   custom_free(_LIST.elem);
-   free(lst->data);
-   free(lst);
-}
+int main() {
+   //int_list_t lst = INITIALIZE_LIST(int_list_t);
+
+   //for (int i = 0; i < 10; i++)
+   //   LIST_PUSH(&NEW_NAME_, i);
+
+   //print(NEW_NAME);
+
+
+   //LIST_OF int NAMED lst INITIALIZE;
+
+   int_list_t* lst = &NEW_LIST(int_list_t);
+
+   for (int i = 0; i < 10; i++)
+      LIST_PUSH(lst, i);
+
+   print(CAST(int_list_t, *lst));
+
 
 /*
-int main() {
-   list* lst = new_list();
-
-   for (int i = 0; i < 10; i++) {
-      char* word = (char*)malloc(sizeof(char)*10);
-      word = "hello";
-      list_push(lst, word);
+   int_list_t my_list;
+   if (1 == 1) {
+      LIST_OF int NAMED lst INITIALIZE;
+      for (int i = 0; i < 10; i++)
+         LIST_PUSH(&lst, i);
    }
-
-   int i = 0;
-   _LIST_FOR_EACH(lst, elem, char*) {
-      printf("\ncurrent:%s", *elem);//*_LIST.elem);//*((&_LIST)+0));
-      i++; if (i == 10) break;
-   }
-}
+   print(CAST(int_list_t, lst));
 */
+
+/*
+   LIST_FOR_EACH(&lst, elem)
+      printf("\ncurrent:%i", *elem);
+
+   for_each(auto elem in lst)
+      printf("%i", *elem);
+*/
+
+
+   return 0;
+}
+
