@@ -2,7 +2,7 @@
 
 #define DEBUG 1
 
-int main() {
+int main(void) {
 	char* msg = "This is a DEBUG MESSAGE!";
 	BUG("debug message: %s", msg);
 

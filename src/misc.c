@@ -1,8 +1,11 @@
 #include "misc.h"
 
+#include <stdint.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <termios.h>
+
+int TAB = 0;
 
 void error(const char* str, enum error_type how_bad) {
    printf("\n\terror occured: %s\n\texiting...\n", str);
@@ -20,6 +23,10 @@ void printcnf(char c, int n, const char* str) { //print character c n times, bef
 
 bool isDigit(char c) {
    return c >= '0' && c <= '9';
+}
+
+bool isLetter(char c) {
+   return (c >='a' && c<='z') || (c>='A' && c<='Z');
 }
 
 char* str_cpy(const char* str, int len) {

@@ -50,12 +50,15 @@
 		<Unit filename="src/misc.h" />
 		<Unit filename="src/samples/bug_example.c">
 			<Option compilerVar="CC" />
+			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
 		<Unit filename="src/samples/list_test.c">
 			<Option compilerVar="CC" />
+			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
 		<Unit filename="src/samples/test.c">
 			<Option compilerVar="CC" />
+			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
 		<Unit filename="src/sexps.c">
 			<Option compilerVar="CC" />

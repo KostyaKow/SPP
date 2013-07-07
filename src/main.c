@@ -4,29 +4,29 @@
 #include "lexer.h"
 #include "errors.h"
 
-lex_table_t* lex_table = NULL;
-
-bool init(int nargs, char** args) {
-   lex_table = (lex_table*)malloc(sizeof(lex_table_t));
-   lex_table->lexemes = new_list();
+error_e init(int nargs, char** args) {
+   INIT_LIST_HEAD(&lex_table.src.list);
+   INIT_LIST_HEAD(&lex_table.lexemes.list);
 }
 
 
-
 int main(int nargs, char** args) {
-   init(nargs, args);
-
+   E(init(nargs, args));
 
    printf("\n\n*********\n>");
 
    char str[10000];
+
    bool terminate = false;
-
-
+   int i = 0;
    while (!terminate) {
-      terminate = handle_error(lex_table_add(scanf(str, "%10000[^\n]"), str));
+      if (scanf("%10000[^\n]", str))
+         terminate = E(lex_table_add(str, strlen(str)));
       printf("\n\n\n>");
-
+      getch();
+      i++;
+      if (i > 10)
+         break;
    }
 
    return 0;

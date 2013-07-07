@@ -1,6 +1,6 @@
 #include "errors.h"
 
-bool handle_error(error error_code, const char* msg) {
+bool handle_error(error_e error_code, const char* msg) {
    switch (error_code) {
    case ERROR_INIT:
       printf("\nerror: could not initialize!");

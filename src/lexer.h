@@ -1,36 +1,50 @@
 #ifndef LEXER_H_INCLUDED
 #define LEXER_H_INCLUDED
 
+#include "list.h"
+
 #include "misc.h"
 #include "errors.h"
 
-typedef struct lexeme {
-   enum { IDENTIFIER, NUMBER, STRING, CHAR };
+typedef enum lexeme_t_type { IDENTIFIER, NUMBER, STRING, CHAR, PAREN } lexeme_t_type_e;
 
-    void *val, *str_val;
+typedef struct {
+   lexeme_t_type_e type;
+
+   char *value;
+   uint8_t len;
+
+   struct list_head list;
+
 } lexeme_t;
 
-typedef struct lex_table {
-   const char* str_val; int str_val_len;
 
-   void* val;
+//if a REPL is running, or there is multiple files, this will store each input set
+//TODO: if there is no extra info, why not just use char** instead of all this?
+typedef struct {
+   char *str;
+   int len;
 
-   uint8_t type;
-   bool atom;
-   bool single_sexps;
+   struct list_head list;
 
-   list* lexemes;
+} source_code_t;
 
-   uint16_t size_sub_sexps, sub_sexps_len;
+
+///
+typedef struct {
+   source_code_t   src;
+   lexeme_t        lexemes;
+
 } lex_table_t;
+///
 
-extern lex_table_t* lex_table;
+error_e lex_table_add(const char *str, int len);
 
-error lex_table_add(const char* str, int len);
-
-inline char* remove_comments(const char* str) {
-    return (char*)str;
+inline error_e remove_comments(char *str) {
+    return NO_ERROR;
 }
+
+extern lex_table_t lex_table;
 
 
 #endif // LEXER_H_INCLUDED
