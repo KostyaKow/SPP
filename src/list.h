@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <string.h>
 #include <stdio.h>
 
 /*
@@ -19,17 +20,46 @@ NEW_LIST_OF int NAMED *lst3 INITIALIZE_PTR, lst4 INITIALIZE;
 NEW_LIST_OF int
     NAMED *lst3 INITIALIZE_PTR, lst4 INITIALIZE;
 
+sample:
+
+LIST_OF int  IS_TYPE int_list_t;
+LIST_OF char IS_TYPE char_list_t;
+
+char_list_t* str_to_lst(const char* str, int len) {
+   char_list_t* lst = &NEW_LIST(char_list_t);
+
+   if (len == 0)
+      len = strlen(str);
+
+   for (int i = 0; i < len; i++)
+      LIST_PUSH(*lst, str[i]);
+
+   return lst;
+}
+
+void print(list lst) {
+   for_each(c in CAST(char_list_t, lst))
+      printf("%c", *c);
+}
+
+int main() {
+   char_list_t* hello_str = str_to_lst("hello", 0);
+   print(LIST_CAST(*hello_str));
+   DELETE_LIST(hello_str);
+   return 0;
+}
 
 */
 
-
 //do *NOT* use this structure!
-struct __list {
+typedef struct __list {
    int length, size;
    void** data;
-};
+} list;
 
 #define CAST(type, val) (*((type*)(&(val))))
+#define LIST_CAST(val) (*((list*)(&(val)))) //cast to default list
+
 
 #define PASTE(x, y) x ## _ ## y
 #define NEW_NAME_(x) PASTE(random_var, x)
@@ -45,17 +75,9 @@ struct __list {
    typedef __typeof__(NEW_NAME)
 
 #define NAMED \
-   * data; } NEW_NAME; \
-   NEW_NAME.length = 0; NEW_NAME.size = 3; NEW_NAME.data = (__typeof__(NEW_NAME.data)) malloc(sizeof(NEW_NAME.data) * NEW_NAME.length); \
-   __typeof__(NEW_NAME)
+   * data; }
 
-#define INITIALIZE \
-   = NEW_NAME
-
-#define INITIALIZE_PTR \
-   = &NEW_NAME
-
-__list* __new_list() {
+inline __list* __new_list() {
    __list *lst = (__list*)malloc(sizeof(__list));
    lst->length = 0;
    lst->size = 3;
@@ -64,6 +86,9 @@ __list* __new_list() {
 }
 
 #define NEW_LIST(type)     (*((type*)__new_list()))
+
+#define INITIALIZE_PTR = (__typeof__(NEW_NAME)*)__new_list()
+#define INITIALIZE = NEW_LIST(__typeof__(NEW_NAME))
 
 ///-------------------------------------
 
@@ -77,11 +102,11 @@ __list* __new_list() {
 
 #define LIST_PUSH_(lst, elem) \
    do { \
-      if (lst->length >= lst->size) { \
-         lst->size *= 2; \
-         lst->data = (__typeof__(lst->data))realloc(lst->data, lst->size * sizeof(lst->data)); \
+      if (lst.length >= lst.size) { \
+         lst.size *= 2; \
+         lst.data = (__typeof__(lst.data))realloc(lst.data, lst.size * sizeof(lst.data)); \
       } \
-      lst->data[lst->length++] = elem; \
+      lst.data[lst.length++] = elem; \
    } while (0)
 
 #define LIST_GET_(lst, elem) (lst->data[elem])
@@ -165,54 +190,4 @@ inline void** __list_pop_num(__list* lst, int num) {
 #define in ,
 #define for_each_(b, a) LIST_FOR_EACH(&a, b)
 #define for_each(b) for_each_(b)
-
-
-LIST_OF int IS_TYPE int_list_t;
-
-void print(int_list_t lst) {
-   for_each(number in lst)
-      printf("\n%i", *number);
-}
-
-
-int main() {
-   //int_list_t lst = INITIALIZE_LIST(int_list_t);
-
-   //for (int i = 0; i < 10; i++)
-   //   LIST_PUSH(&NEW_NAME_, i);
-
-   //print(NEW_NAME);
-
-
-   //LIST_OF int NAMED lst INITIALIZE;
-
-   int_list_t* lst = &NEW_LIST(int_list_t);
-
-   for (int i = 0; i < 10; i++)
-      LIST_PUSH(lst, i);
-
-   print(CAST(int_list_t, *lst));
-
-
-/*
-   int_list_t my_list;
-   if (1 == 1) {
-      LIST_OF int NAMED lst INITIALIZE;
-      for (int i = 0; i < 10; i++)
-         LIST_PUSH(&lst, i);
-   }
-   print(CAST(int_list_t, lst));
-*/
-
-/*
-   LIST_FOR_EACH(&lst, elem)
-      printf("\ncurrent:%i", *elem);
-
-   for_each(auto elem in lst)
-      printf("%i", *elem);
-*/
-
-
-   return 0;
-}
 
