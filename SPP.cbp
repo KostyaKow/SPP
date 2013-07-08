@@ -72,7 +72,6 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="src/sexps.h" />
-		<Unit filename="src/types.h" />
 		<Extensions>
 			<code_completion />
 			<debugger />

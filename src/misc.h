@@ -39,6 +39,10 @@ static inline bool isSpecial(char c) {
    return isParen(c) || c == '\'' || c == '`' || c == '"';
 }
 
+static inline bool isWhitespace(char c) {
+   return c == ' ' || c == '\`' || c == '\n';
+}
+
 char* str_cpy(const char* str, int len); //returns a new string with len number of characters from str
 
 void printcnf(char c, int n, const char* str);
@@ -74,12 +78,14 @@ void printcnf(char c, int n, const char* str);
    #define BUG_PRINTN(str, n)       do { for (int i = 0; i < n; i++) printf("%c", str[i]); } while(0)
    #define BUGN(str, n)             do { _helper_BUG("", ' '); BUG_PRINTN(str, n); } while (0)
 
+   #define STAR(n)                  do { for (int i = 0; i < n; i++) printf("%c", '*'); } while (0)
+
    #define BUG_LVL(lvl, ...)        do { if (lvl <= DEBUG) BUG(__VA_ARGS__); } while (0)
    #define BUG_PRINT_LVL(lvl, ...)  do { if (lvl <= DEBUG) BUG_PRINT(__VA_ARGS__); } while (0)
 
    #define BUG_PRINTN_LVL(lvl, ...) do { if (lvl <= DEBUG) BUG_PRINTN(__VA_ARGS__); } while (0)
    #define BUGN_LVL(lvl, ...)       do { if (lvl <= DEBUG) BUGN(__VA_ARGS__); } while (0)
-
+   #define STAR_LVL(lvl, n)         do { if (lvl <= DEBUG) STAR(n); } while (0)
 #else
    #define BUG(...)
    #define BUG_PRINT(...)

@@ -5,6 +5,7 @@ lookup_table_t lookup_table;
 
 error_e lookup_table_add(const char *str, int len) {
    lookup_table_t* tmp = malloc(sizeof(lookup_table_t));
+
    list_add(&tmp->list, &lookup_table.list);
 
    error_e err = NO_ERROR;
@@ -17,7 +18,7 @@ error_e lookup_table_add(const char *str, int len) {
    if (err != NO_ERROR)
       goto cleanup;
 
-   TAB=1;BUG_PRINT_LVL(20, "successfully added input to lookup_table\n\n");
+   TAB=1;BUG_PRINT_LVL(20, "successfully added input to lookup_table");
 
    return err;
 cleanup:;

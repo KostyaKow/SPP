@@ -10,8 +10,8 @@ error_e init(int nargs, char** args) {
       mode = 2;
 
    TAB = 1;
-
    INIT_LIST_HEAD(&lookup_table.list);
+   INIT_LIST_HEAD(&lookup_table.src.lexemes.list);
 
    return NO_ERROR;
 }
