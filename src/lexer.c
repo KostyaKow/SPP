@@ -14,6 +14,12 @@ error_e lex_analyze(source_code_t* src_RETURN, const char *str, int len) {TAB = 
    src_RETURN->len = len;
 
 
+   /* This code is really ugly. I should probably make my own regex library.
+    * TODO:
+    * -do not increment c automatically; do it by hand inside each check
+    * -add separate types of parens
+    * -make everything inside {} a separate lexeme (similar to "", but a bit more complex)
+    */
    for (char *c = curr_str; likely(c != curr_str+len && *c != '\0'); c += 1) {
       if (isWhitespace(*c))
          continue;
@@ -41,7 +47,7 @@ error_e lex_analyze(source_code_t* src_RETURN, const char *str, int len) {TAB = 
          continue;
       }
 
-      else if (isSpecial(*c)) { //ugly. gotta make my own regex
+      else if (isSpecial(*c)) {
          //if (c is ') and  (or (c+c1+c2 = 'char' where char != ' and char != \) ex: 'a'
          //                     (c+c1+c2+c3 = '\char')                           ex: '\\'
          //                     (c+c1 = '')

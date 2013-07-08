@@ -18,6 +18,10 @@ error_e lookup_table_add(const char *str, int len) {
    if (err != NO_ERROR)
       goto cleanup;
 
+   err = eval_sexps();
+   if (err != NO_ERROR)
+      goto cleanup;
+
    TAB=1;BUG_PRINT_LVL(20, "successfully added input to lookup_table");
 
    return err;

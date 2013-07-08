@@ -3,7 +3,8 @@ SPP
 
 Lisp interpreter written in C.
 
-Compilation instruction:
+Compiling
+---------
 
 GNU/Linux & other Unix systems using GCC:
 
@@ -19,4 +20,4 @@ Copyright 2013 Kostyantyn Kovalskyy (Konstantin Kowalski).
 
 THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE v2 (GPLv2) OR (AT YOUR OPTION) ANY LATER VERSION.
 
-Main contributor: Konstantin Kowalski (Kostyantyn Kovalskyy) <kostyakow42 at gmail dot com>
+list.h file comes from Linux kernel, (so it's GPLv2.)
