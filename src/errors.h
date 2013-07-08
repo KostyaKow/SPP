@@ -1,7 +1,7 @@
 #ifndef ERRORS_H_INCLUDED
 #define ERRORS_H_INCLUDED
 
-#include "misc.h"
+#include <stdbool.h>
 
 typedef enum error
    { NO_ERROR, ERROR_INIT, WARNING_INIT, ERROR_QUOTES_WITHOUT_PARENTHESIS,

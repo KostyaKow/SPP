@@ -41,6 +41,10 @@
 		</Unit>
 		<Unit filename="src/lexer.h" />
 		<Unit filename="src/list.h" />
+		<Unit filename="src/lookuptable.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/lookuptable.h" />
 		<Unit filename="src/main.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -48,6 +52,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="src/misc.h" />
+		<Unit filename="src/repl.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/repl.h" />
 		<Unit filename="src/samples/bug_example.c">
 			<Option compilerVar="CC" />
 			<Option target="&lt;{~None~}&gt;" />

@@ -1,27 +1,25 @@
 #include "lexer.h"
+#include "lookuptable.h"
+#include "misc.h"
 
-lex_table_t lex_table;
-
-error_e lex_table_add(const char *str, int len) {TAB = 1;
-
+error_e lex_analyze(source_code_t* src_RETURN, const char *str, int len) {TAB = 1;
    if (len == 0) {
       len = strlen(str);
-      BUG_LVL(100, "called with an empty string");
+      BUG_LVL(60, "called with an empty string");
    }
    BUG_LVL(60, "called with a string of length %i", len);
 
    char *curr_str = str_cpy(str, len);
 
-   source_code_t *curr_src = malloc(sizeof(source_code_t));
-   curr_src->str = curr_str;
-   curr_src->len = len;
-
-   list_add(&curr_src->list, &lex_table.src.list);
+   //src_RETURN = malloc(sizeof(source_code_t)); //this table is initialized by parent
+   INIT_LIST_HEAD(&src_RETURN->lexemes.list); //INIT_LIST_HEAD(&lookup_table.src.lexemes.list);
+   src_RETURN->str = curr_str;
+   src_RETURN->len = len;
 
    BUG_LVL(25, "");TAB = 3;
    for (char *c = curr_str; likely(c != curr_str+len && *c != '\0'); c += 1) {
       lexeme_t *lexeme = malloc(sizeof(lexeme_t));
-      list_add(&lexeme->list, &lex_table.lexemes.list);
+      list_add(&lexeme->list, &src_RETURN->lexemes.list);
       lexeme->value = c;
 
       if (isParen(*c)) {
@@ -120,7 +118,7 @@ place:;
          c += lexeme->len;
          BUG_PRINT_LVL(25, "identifier (length %i): ", lexeme->len);
          BUG_PRINTN_LVL(25, lexeme->value, lexeme->len);
-         list_add(&lexeme->list, &lex_table.lexemes.list);
+         list_add(&lexeme->list, &lookup_table.src.lexemes.list);
          continue;
       }
 
