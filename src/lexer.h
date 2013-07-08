@@ -6,7 +6,7 @@
 #include "misc.h"
 #include "errors.h"
 
-typedef enum lexeme_t_type { IDENTIFIER, NUMBER, STRING, CHAR, PAREN } lexeme_t_type_e;
+typedef enum lexeme_t_type { IDENTIFIER, NUM, STR, CHAR, PAREN } lexeme_t_type_e;
 
 typedef struct {
    lexeme_t_type_e type;
@@ -18,9 +18,7 @@ typedef struct {
 
 } lexeme_t;
 
-
-//if a REPL is running, or there is multiple files, this will store each input set
-//TODO: if there is no extra info, why not just use char** instead of all this?
+//TODO move lexeme_t to source
 typedef struct {
    char *str;
    int len;

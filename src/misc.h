@@ -10,12 +10,35 @@
 
 #include "config.h"
 
+//compiler 1; repl 2
+extern uint8_t mode;
+
 enum error_type { BAD_INPUT, BAD_PAREN, NULL_PTR };
 
 char getch(void);
 void error(const char* str, enum error_type how_bad);
-bool isDigit(char c);
-bool isLetter(char c);
+
+static inline bool isDigit(char c) {
+   return c >= '0' && c <= '9';
+}
+static inline bool isLetter(char c) {
+   return (c >='a' && c<='z') || (c>='A' && c<='Z');
+}
+static inline bool isPossibleFuncStart(char c) {
+   return isLetter(c) ||
+            c == '!' || c == '@' || c == '#' || c == '$' || c == '%' || c == '|' || c == ':' ||
+            c == '^' || c == '&' || c == '*' || c == '-' || c == '_' || c == '+' || c == '=' ||
+            c == '~' || c == '<' || c == '>' || c == ',' || c == '/' || c == '?' || c == ';' ||
+            c == '\\';
+}
+static inline isParen(char c) {
+   return c == '(' || c == ')' || c == '[' || c == ']' || c == '{' || c == '}';
+}
+
+static inline bool isSpecial(char c) {
+   return isParen(c) || c == '\'' || c == '`' || c == '"';
+}
+
 char* str_cpy(const char* str, int len); //returns a new string with len number of characters from str
 
 void printcnf(char c, int n, const char* str);

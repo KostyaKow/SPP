@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <termios.h>
 
+uint8_t mode;
 int TAB = 0;
 
 void error(const char* str, enum error_type how_bad) {
@@ -21,13 +22,6 @@ void printcnf(char c, int n, const char* str) { //print character c n times, bef
 }
 
 
-bool isDigit(char c) {
-   return c >= '0' && c <= '9';
-}
-
-bool isLetter(char c) {
-   return (c >='a' && c<='z') || (c>='A' && c<='Z');
-}
 
 char* str_cpy(const char* str, int len) {
    len = (len == 0) ? strlen(str) : len;

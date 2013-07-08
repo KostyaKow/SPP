@@ -12,6 +12,11 @@ bool handle_error(error_e error_code, const char* msg) {
       return false;
       break;
 
+   case ERROR_QUOTES_WITHOUT_PARENTHESIS:
+      printf("\nquotes without parenthesis");
+      return false;
+      break;
+
    case NO_ERROR:
       return false;
       break;
