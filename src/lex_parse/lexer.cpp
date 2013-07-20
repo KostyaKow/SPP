@@ -26,22 +26,22 @@ class Lexer {
 public:
    //regular regex interface for users of the class
    typedef pair<
-                string s,
+                string,
                 function<void(void)>
                > Regex; 
-private:   
-   typedef pair<
-                function<bool(string)>,
-                function<void(void)>,
-                int
-               > Regex__internal;
-
+private:
+   struct Regex__internal {
+      function<int(string, place)> test; //returns 0 if no match...
+      function<void(void)>   action;
+   };
 
    Regex__internal makeRegex__internal(Regex _regex) {
       Regex__internal regex;
       regex.first = _regex.first;
-   
-      for (int i
+       
+      for (char c : _regex.first) {
+         
+      } 
    }
 
    vector<Regex__internal> regexes;
@@ -65,8 +65,12 @@ public:
    }
    
    void run(string str) {
-      for (auto i : list(0, str.length())) {
-         if (
+      int i = 0;
+      for (auto regex : regexes) {
+         regex.test(i
+         for (auto i : list(0, str.length())) {
+            if (regex.test(str, i)
+         }
       }
    }
 
