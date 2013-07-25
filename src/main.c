@@ -16,7 +16,7 @@ error_e init(int nargs, char** args) {
    return NO_ERROR;
 }
 
-int main(int nargs, char** args) {
+int main1(int nargs, char** args) {
    E(init(nargs, args));
 
    switch (mode) {
