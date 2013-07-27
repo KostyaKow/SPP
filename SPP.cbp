@@ -36,6 +36,12 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="src/errors.h" />
+		<Unit filename="src/lex_parse/config.h" />
+		<Unit filename="src/lex_parse/lexer.cpp" />
+		<Unit filename="src/lex_parse/list.cpp" />
+		<Unit filename="src/lex_parse/list.h" />
+		<Unit filename="src/lex_parse/regex.cpp" />
+		<Unit filename="src/lex_parse/regex.h" />
 		<Unit filename="src/lexer.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -58,15 +64,12 @@
 		<Unit filename="src/repl.h" />
 		<Unit filename="src/samples/bug_example.c">
 			<Option compilerVar="CC" />
-			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
 		<Unit filename="src/samples/list_test.c">
 			<Option compilerVar="CC" />
-			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
 		<Unit filename="src/samples/test.c">
 			<Option compilerVar="CC" />
-			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
 		<Unit filename="src/sexps.c">
 			<Option compilerVar="CC" />
