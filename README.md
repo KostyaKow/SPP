@@ -1,10 +1,9 @@
-SPP
-===
+##SPP
 
-Lisp interpreter written in C.
+__Description__
+I can't really describe what this is, since I am not sure myself.
 
-Compiling
----------
+__Compiling__
 
 GNU/Linux & other Unix systems using GCC:
 
@@ -16,8 +15,13 @@ Windows:
 
 Code::Blocks project should probably work, even through I haven't tested it yet.
 
+__License__
+
 Copyright 2013 Kostyantyn Kovalskyy (Konstantin Kowalski).
 
-THIS PROGRAM IS FREE SOFTWARE; YOU CAN REDISTRIBUTE IT AND/OR MODIFY IT UNDER THE TERMS OF THE GNU GENERAL PUBLIC LICENSE v2 (GPLv2) OR (AT YOUR OPTION) ANY LATER VERSION.
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Saint Ignucius, either version 2 of the License, or
+(at your option) any later version.
 
-list.h file comes from Linux kernel, (so it's GPLv2.)
+If you ask nicely enough, I will let you use a different license.

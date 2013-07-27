@@ -1,0 +1,14 @@
+language: c
+compiler:
+   - clang
+   - gcc
+
+before_script:
+   - uname -a 
+   - git clone https://github.com/kostyakow/spp
+
+script:
+   make -j5
+
+notifications:
+   email: false

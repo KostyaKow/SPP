@@ -22,13 +22,15 @@ int main1(int nargs, char** args) {
    switch (mode) {
    case 1:
       BUG_LVL(1, "compiler is not yet implemented");
-      break;
+   break;
+
    case 2:
       return repl();
-      break;
+   break;
+
    default:
       BUG_LVL(1, "unkown mode selected");
-      break;
+   break;
    }
 
    return 0;

@@ -1,17 +1,12 @@
 #ifndef REGEX_H_INCLUDE
 #define REGEX_H_INCLUDE
 
-/*
-   WARNING: It's probably a bad time to tell you, but I don't know regex, and
-   didn't check specifications... ;)
-*/
-
 #include <assert.h>
 
 #include "config.h"
 #include "list.h"
 
-//some of this should not be asser, but give a user error/warning
+//TODO: for some of the cases, give a user error instead of using assert.
 #define docheck(n) assert(i + n < reg.length());
 
 class Regex {
@@ -20,7 +15,9 @@ class Regex {
    void _Regex() {
 
       struct Match {
-         enum class Type { CHAR_CLASS, ALL, NOT_ALL, ANY, NOT_ANY };
+         enum class Type { DOT, START_POS, END_POS, STAR, //Posix
+                           QUESTION_MARK, PLUS, PIPE, CIGAR, //extended Posix
+                           CHAR_CLASS, ALL, NOT_ALL, ANY, NOT_ANY };
          //bool range; //a-z 1-9
          Type type;
          vector<char> vals;
@@ -30,15 +27,30 @@ class Regex {
 
       //loop all the characters and break them up into matches
       for (uint16_t i = 0; i < reg.length(); i++) {
-            Match m;
-            m.type = Match::Type::ANY;
-            //m.range = false;
+         Match m;
+         m.type = Match::Type::ANY;
+         //m.range = false;
 
-         if (reg[i] == '\\') {
+         if (reg[i] == '.')
+            m.type = Match::Type::DOT;
+         else if (reg[i] == '^')
+            m.type = Match::Type::START_POS;
+         else if (reg[i] == '$')
+            m.type = Match::Type::END_POS;
+         else if (reg[i] == '*')
+            m.type = Match::Type::STAR;
+         else if (reg[i] == '?')
+            m.type = Match::Type::QUESTION_MARK;
+         else if (reg[i] == '+')
+            m.type = Match::Type::PLUS;
+         else if (reg[i] == '|')
+            m.type = Match::Type::PIPE;
+
+         //TODO: handle all escaped chars
+         else if (reg[i] == '\\') {
             docheck(1)
             m.vals.push_back(reg[i+1]);
          }
-
          //first check for scecial characters, and then run look for the rest
          else if (reg[i] == '[') {
             i++;
@@ -63,7 +75,6 @@ class Regex {
                   m.vals.push_back(reg[i]);
             }
          }
-
          else if (reg[i] == '(') {
             //TODO what if previous \ is actually \\ also, check for ending better
             for (; reg[i-1] != '\\' && reg[i] != ')'; i++) {
@@ -71,7 +82,6 @@ class Regex {
                m.vals.push_back(reg[i]);
             }
          }
-
          else
             throw("not implemented");
 
@@ -79,14 +89,26 @@ class Regex {
       }
 
 
-      match = [&](String s) {
-         for (Match m : matches) {
+      match = [&](String s) -> string {
+         string ret;
+
+         if (matches[0].type == Match::Type::DOT || //check for stuff that access previous element and do something about them...
+
+         for (int matchNum = 0, i = 0; i < s.size() && matchNum < matches.size(); i++) {
+            switch (matches[i].type) {
+            case Match::Type::DOT:
+               ;
+            break;
+
+            case
+            }
          }
+
       };
    }
 
 public:
-   function <bool(String)> match;
+   function <string(String)> match;
 
    Regex(const Regex& other)
       : match(other.match), reg(other.reg)
