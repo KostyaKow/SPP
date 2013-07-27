@@ -92,9 +92,11 @@ void _print_sexps(struct Sexps* sexps, int nesting_level) {
          case SEXPS_INT:
            printf("int with value: %i", *(int*)sexps->val);
          break;
+
          case SEXPS_FLOAT:
             printf("float with value: %F", *(float*)sexps->val);
          break;
+
          case SEXPS_CHAR:
             printf("char with value: %c", *(char*)sexps->val);
          break;
