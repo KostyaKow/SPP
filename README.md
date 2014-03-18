@@ -2,7 +2,7 @@
 
 __Description__
 
-I can't really describe what this is, since I am not sure myself.
+SPP is a tiny, portable interpreter for Scheme programming language (R5RS).
 
 __Compiling__
 
@@ -25,4 +25,4 @@ it under the terms of the GNU General Public License as published by
 the Saint Ignucius, either version 2 of the License, or
 (at your option) any later version.
 
-If you ask nicely enough, I will let you use a different license.
+If you ask nicely enough, I will let you use the code under a different license.
