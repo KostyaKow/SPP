@@ -1,23 +1,3 @@
-/*
-//functions & predefined stuff
-+ - / =
-list, car, cdr, cons, length
-null //empty list
-
-//random syntax
-(+ 3 5)
-(lambda (x y) (+ x y))
-(def x val)
-(if (x) a b)
-
-1. input string
-3. interpret :: string -> session -> sexpr --modifies Session so maybe copy it
-      lex :: string -> [string]
-      parse :: [string] -> sexps
-      eval :: sexps -> session -> sexps
-
-*/
-
 #include <iostream>
 #include <vector>
 using namespace std;
@@ -75,6 +55,7 @@ struct Sexpr {
 
 struct Session {};
 
+///
 Sexps parse(cstring lex) {
    Sexps s;
    if (isNum(lex)) {
@@ -83,7 +64,6 @@ Sexps parse(cstring lex) {
       *s.v = lex;
    }
 }
-
 Sexps parse(cstringvec lexemes) {
    Sexps s;
 
@@ -97,7 +77,6 @@ Sexps parse(cstringvec lexemes) {
          s.t = SexpsType::SEXPS;
          s.v = new vector<Sexps>;
 
-         stringvec sub;
          for (; i < lexemes.length(); i++) {
             lex = lexemes[i];
             if (lex == ")")
@@ -108,6 +87,13 @@ Sexps parse(cstringvec lexemes) {
          //s.v->push_back()
       }
    }
+}
+///
+
+
+///
+function action(x) {
+   return x*5;
 }
 
 Sexpr eval(Sexpr sexps, Session& session) {}

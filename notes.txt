@@ -1,0 +1,17 @@
+//functions & predefined stuff
++ - / =
+list, car, cdr, cons, length
+null //empty list
+
+//random syntax
+(+ 3 5)
+(lambda (x y) (+ x y))
+(def x val)
+(if (x) a b)
+
+1. input string
+3. interpret :: string -> session -> sexpr --modifies Session so maybe copy it
+      lex :: string -> [string]
+      parse :: [string] -> sexps
+      eval :: sexps -> session -> sexps
+
