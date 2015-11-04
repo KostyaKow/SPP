@@ -26,18 +26,28 @@ getLevel :: Int -> [Lexeme] -> Maybe Int
 getLevel pos lst = f lst 0 0
    where f xs curPos deep -- f [] _ _ = Nothing
             | length xs == 0  = Nothing
+            | curPos == pos && head xs == C  = Just (deep-1)
             | curPos == pos   = Just deep
             | head xs == O    = f (tail xs) (curPos+1) (deep+1)
             | head xs == C    = f (tail xs) (curPos+1) (deep-1)
             | otherwise       = f (tail xs) (curPos+1) deep
 
---left here
-findMatching :: Int -> [Lexeme] -> Maybe Int
-findMatching pos lst = findMatching' pos (getLevel pos lst) lst
-findMatching' pos openParen lst
-   where
-      openDepth = getLevel pos lst
+el :: Maybe Int -> Int
+el (Just a) = a
+el Nothing = 0
 
+--Find matching close brace for current depth
+--for posOpen, you gotta use positionOfParen+1
+findMatching :: Int -> [Lexeme] -> Maybe Int
+findMatching posOpen lst = f posOpen (drop posOpen lst) openDepth
+   where openDepth = el $ getLevel posOpen lst
+         f _ [] _ = Nothing
+         f pos xs depth
+            | depth == openDepth && head xs == C = Just pos
+            | head xs == C = f (pos + 1) (tail xs) (depth-1)
+            | head xs == O = f (pos + 1) (tail xs) (depth+1)
+            | otherwise = f (pos + 1) (tail xs) depth
+         -- f pos xs depth
 
 --data Sexp = Atom String | Cons Sexp Sexp | List [Sexp] | Nil | Bad deriving (Show)
 data Sexp = Atom String | Cons Sexp Sexp | Nil | Bad deriving (Show)
@@ -47,10 +57,10 @@ parse [] = Bad
 parse xs = parse' xs
 
 parse' [S s] = Atom s
-parse' (O:S s:xs) = Cons (Atom s) (parse' xs)
+parse' lst@(O:xs) = Cons (Atom s) (parse' xs)
+
 --parse' (C:xs) =
-
-
+--findMatching 0 $ tokenize "(+ 3 5 32)"
 
 --( + 3 (+ 3 5) 34)
 {- main = do
